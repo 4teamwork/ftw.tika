@@ -12,4 +12,12 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <!-- Register the setup handler for the import step portal transform -->
+  <genericsetup:importStep
+      name="ftw.tika.portal_transforms"
+      title="Portal transforms for Tika integration"
+      description=""
+      handler="ftw.tika.setuphandlers.install_portal_transforms">
+  </genericsetup:importStep>
+
 </configure>

@@ -1,6 +1,8 @@
 from ftw.tika.converter import TikaConverter
 from ftw.tika.exceptions import ProcessError
 from ftw.tika.exceptions import TikaConversionError
+from ftw.tika.exceptions import TikaJarNotConfigured
+from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
 from StringIO import StringIO
 from unittest2 import TestCase
@@ -46,7 +48,6 @@ class TestConverter(TestCase):
         _converter.run_process = _run_process
 
     def test_process_error_causes_coverter_to_raise_conversion_error(self):
-
         # Monkey patch run_process helper
         from ftw.tika import converter as _converter
         _run_process = _converter.run_process
@@ -64,3 +65,13 @@ class TestConverter(TestCase):
 
         # Restore the original run_process function
         _converter.run_process = _run_process
+
+    def test_missing_jar_path_causes_converter_to_raise(self):
+        with self.assertRaises(TikaJarNotConfigured):
+            tika_converter = TikaConverter()
+            _ = tika_converter.convert('')
+
+    def test_invalid_jar_path_causes_converter_to_raise(self):
+        with self.assertRaises(TikaJarNotFound):
+            tika_converter = TikaConverter(path="/nonexistent")
+            _ = tika_converter.convert('')

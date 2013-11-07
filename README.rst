@@ -13,17 +13,21 @@ Input Formats
 -------------
 
 * XML based Microsoft Office document formats
-  - ``*.docx`` Word Documents (``application/vnd.openxmlformats-officedocument.wordprocessingml.document``)
-  - ``*.dotx`` Word Templates (``application/vnd.openxmlformats-officedocument.wordprocessingml.template``)
-  - ``*.xlsx`` Excel Sheets (``application/vnd.openxmlformats-officedocument.spreadsheetml.sheet``)
-  - ``*.xltx`` Excel Templates (``application/vnd.openxmlformats-officedocument.spreadsheetml.template``)
-  - ``*.pptx`` Powerpoint Presentations (``application/vnd.openxmlformats-officedocument.presentationml.presentation``)
-  - ``*.potx`` Powerpoint Templates (``application/vnd.openxmlformats-officedocument.presentationml.template``)
-  - ``*.ppsx`` Powerpoint Slideshows (``application/vnd.openxmlformats-officedocument.presentationml.slideshow``)
+
+  - ``*.docx`` Word Documents
+  - ``*.dotx`` Word Templates
+  - ``*.xlsx`` Excel Sheets
+  - ``*.xltx`` Excel Templates
+  - ``*.pptx`` Powerpoint Presentations
+  - ``*.potx`` Powerpoint Templates
+  - ``*.ppsx`` Powerpoint Slideshows
+
+See `mimetypes.py <https://github.com/4teamwork/ftw.tika/blob/master/ftw/tika/mimetypes.py>`_
+for details on the MIME types corresponding to these formats.
 
 
-Input formats supported by Tika, but not wired up yet
------------------------------------------------------
+Formats supported by Tika, but not wired up yet
+------------------------------------------------
 
 * Binary Microsoft Office document formats
 * HyperText Markup Language
@@ -57,9 +61,9 @@ Dependencies
 ------------
 
 ``ftw.tika`` expects to be provided with the path to an installed Tika JAR
-file. Pass the path to the ``tika-app.jar`` to the converter when
-instanciating it.
-
+file. So install the ``tika-app.jar`` and pass the path to it to ``ftw.tika``,
+either by passing it as a keyword argument when instanciating the converter
+directly, or setting it in the Plone registry.
 
 Installing ftw.tika
 -------------------
@@ -98,11 +102,56 @@ Plone 4.3
    :target: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.3.x.cfg
 
 
+Configuration
+=============
+
+``ftw.tika`` expects to be provided with a path to an installed
+``tika-app.jar``. This can be done through ZCML, and therefore also
+through buildout.
+
+
+Configuration in ZCML
+---------------------
+
+The path to the Tika JAR file must be configured in ZCML.
+
+If you used the supplied
+`tika.cfg <https://github.com/4teamwork/ftw.tika/blob/master/tika.cfg>`_
+as described above, you can reference the download location directly from
+buildout by using ``${tika:destination}/${tika:filename}``:
+
+.. code:: ini
+
+    [instance]
+    zcml-additional =
+        <configure xmlns:tika="http://namespaces.plone.org/tika">
+            <tika:config path="${tika:destination}/${tika:filename}" />
+        </configure>
+
+If you installed Tika yourself, just set ``path="/path/to/tika"`` accordingly.
+
+
 Usage
 =====
 
-To use ``ftw.tika``, simply instanciate the converter and pass it the path
-to your ``tika-app.jar``:
+To use ``ftw.tika``, simply ask the ``portal_transforms`` tool for a
+transformation to ``text/plain`` from one of the input formats supported by
+``ftw.tika``:
+
+.. code:: python
+
+            namedfile = self.context.file
+            transform_tool = getToolByName(self.context, 'portal_transforms')
+
+            stream = transform_tool.convertTo(
+                'text/plain',
+                namedfile.data,
+                mimetype=namedfile.contentType)
+            plain_text = stream and stream.getData() or ''
+
+The code calling Tika is encapsulated in its own class, so if for some reason
+you don't want to use the ``portal_transforms`` tool, you can also use the
+converter directly by just instanciating it:
 
 .. code:: python
 
