@@ -6,6 +6,7 @@ version = '1.0b1.dev0'
 tests_require = [
     'unittest2',
     'plone.app.testing',
+    'plone.testing',
     'zope.configuration',
     ]
 
