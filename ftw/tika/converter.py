@@ -2,7 +2,9 @@ from ftw.tika.exceptions import ProcessError
 from ftw.tika.exceptions import TikaConversionError
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.exceptions import TikaJarNotFound
+from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.utils import run_process
+from zope.component import queryUtility
 import logging
 import os
 import tempfile
@@ -26,9 +28,14 @@ class TikaConverter(object):
         if self._path not in (None, ''):
             path = self._path
         else:
-            # Bail if neither are provided
-            msg = "No path to Tika JAR file specified."
-            raise TikaJarNotConfigured(msg)
+            # Otherwise try to get path from ZCML
+            zcmlconfig = queryUtility(IZCMLTikaConfig)
+            if zcmlconfig is not None:
+                path = zcmlconfig.path
+            else:
+                # Bail if neither are provided
+                msg = "No path to Tika JAR file specified."
+                raise TikaJarNotConfigured(msg)
 
         # Check if the specified path is actually a file
         path = os.path.abspath(path)

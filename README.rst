@@ -27,7 +27,7 @@ for details on the MIME types corresponding to these formats.
 
 
 Formats supported by Tika, but not wired up yet
-------------------------------------------------
+-----------------------------------------------
 
 * Binary Microsoft Office document formats
 * HyperText Markup Language
@@ -61,9 +61,10 @@ Dependencies
 ------------
 
 ``ftw.tika`` expects to be provided with the path to an installed Tika JAR
-file. So install the ``tika-app.jar`` and pass the path to it to ``ftw.tika``,
-either by passing it as a keyword argument when instanciating the converter
-directly, or setting it in the Plone registry.
+file. So install Tika and supply ``ftw.tika`` with the path to the
+``tika-app.jar``, either via ZCML configuration or a Plone registry record,
+as described below.
+
 
 Installing ftw.tika
 -------------------
@@ -135,6 +136,7 @@ buildout by using ``${tika:destination}/${tika:filename}``:
             <tika:config path="${tika:destination}/${tika:filename}" />
         </configure>
 
+
 If you installed Tika yourself, just set ``path="/path/to/tika"`` accordingly.
 
 
@@ -169,7 +171,8 @@ converter directly by just instanciating it:
             plain_text = converter.convert(data)
 
 The ``convert()`` method accepts either a data string or a file-like stream
-object.
+object. If no ``path`` keyword argument is supplied, the converter tries to
+get the path to the ``tika-app.jar`` from the ZCML configuration.
 
 
 Links

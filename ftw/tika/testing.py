@@ -6,8 +6,6 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
 from plone.testing import Layer
 from zope.configuration import xmlconfig
-import os
-import tempfile
 
 
 SOME_MIMETYPE = 'application/' \
@@ -28,20 +26,11 @@ class FtwTikaLayer(PloneSandboxLayer):
         xmlconfig.file('configure.zcml', ftw.tika,
                        context=configurationContext)
 
-        # Create a temporary file to be used by tests
-        tmp_file = tempfile.NamedTemporaryFile(delete=False)
-        tmp_file.close()
-        self.tmp_file = tmp_file
-
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.tika:default')
 
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
-
-    def tearDown(self):
-        super(FtwTikaLayer, self).tearDown()
-        os.remove(self.tmp_file.name)
 
 
 FTW_TIKA_FIXTURE = FtwTikaLayer()
