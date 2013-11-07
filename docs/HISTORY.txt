@@ -1,0 +1,9 @@
+Changelog
+=========
+
+
+1.0b1 (unreleased)
+------------------
+
+- First implementation.
+  [lgraf]
