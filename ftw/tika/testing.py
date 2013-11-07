@@ -1,3 +1,4 @@
+from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
@@ -16,6 +17,8 @@ class FtwTikaLayer(PloneSandboxLayer):
                        context=configurationContext)
 
     def setUpPloneSite(self, portal):
+        applyProfile(portal, 'ftw.tika:default')
+
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
 

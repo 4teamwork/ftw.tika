@@ -39,6 +39,9 @@ setup(name='ftw.tika',
 
       install_requires=[
         'setuptools',
+
+        # Plone
+        'Products.GenericSetup',
         ],
 
       tests_require=tests_require,
