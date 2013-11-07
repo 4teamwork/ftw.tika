@@ -1,9 +1,9 @@
 ftw.tika
 ========
 
-This product integrates `Apache Tika <http://tika.apache.org/>`_ for full text indexing with **Plone** by
-providing portal transforms to `text/plain` for the various document formats
-supported by Tika.
+This product integrates `Apache Tika <http://tika.apache.org/>`_ for full text
+indexing with **Plone** by providing portal transforms to ``text/plain`` for the
+various document formats supported by Tika.
 
 
 Supported Formats
@@ -61,9 +61,35 @@ Dependencies
 ------------
 
 ``ftw.tika`` expects to be provided with the path to an installed Tika JAR
-file. So install Tika and supply ``ftw.tika`` with the path to the
-``tika-app.jar``, either via ZCML configuration or a Plone registry record,
-as described below.
+file. So either install Tika yourself first, or use the supplied
+`tika.cfg <https://github.com/4teamwork/ftw.tika/blob/master/tika.cfg>`_
+buildout:
+
+.. code:: ini
+
+    [buildout]
+    parts +=
+        tika
+
+    [tika]
+    recipe = hexagonit.recipe.download
+    url = http://mirror.switch.ch/mirror/apache/dist/tika/tika-app-1.4.jar
+    download-only = true
+    filename = tika.jar
+
+This will download the Tika app JAR to
+``${buildout:directory}/parts/tika/tika.jar``. You can configure this path
+for ``ftw.tika`` directly from buildout using the
+`ZCML directive <#configuration-in-zcml>`_
+described below:
+
+.. code:: ini
+
+    [instance]
+    zcml-additional =
+        <configure xmlns:tika="http://namespaces.plone.org/tika">
+            <tika:config path="${tika:destination}/${tika:filename}" />
+        </configure>
 
 
 Installing ftw.tika
@@ -135,7 +161,6 @@ buildout by using ``${tika:destination}/${tika:filename}``:
         <configure xmlns:tika="http://namespaces.plone.org/tika">
             <tika:config path="${tika:destination}/${tika:filename}" />
         </configure>
-
 
 If you installed Tika yourself, just set ``path="/path/to/tika"`` accordingly.
 
