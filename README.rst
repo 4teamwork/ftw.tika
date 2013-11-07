@@ -83,6 +83,13 @@ Installing ftw.tika
   ``metadata.xml``.
 
 
+Uninstalling ftw.tika
+---------------------
+
+``ftw.tika`` has an uninstall profile. To uninstall ``ftw.tika``, import the
+``ftw.tika:uninstall`` profile using the ``portal_setup`` tool.
+
+
 Compatibility
 -------------
 

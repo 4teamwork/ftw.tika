@@ -12,12 +12,30 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <!-- Register the uninstall profile -->
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="ftw.tika Uninstall"
+      directory="profiles/uninstall"
+      description="Uninstall profile for ftw.tika (Apache Tika integration for Plone)"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
   <!-- Register the setup handler for the import step portal transform -->
   <genericsetup:importStep
       name="ftw.tika.portal_transforms"
       title="Portal transforms for Tika integration"
       description=""
       handler="ftw.tika.setuphandlers.install_portal_transforms">
+  </genericsetup:importStep>
+
+
+  <!-- Register the setup handler for the uninstall import step -->
+  <genericsetup:importStep
+      name="ftw.tika.uninstall_portal_transforms"
+      title="Uninstall portal transforms for Tika integration"
+      description=""
+      handler="ftw.tika.setuphandlers.uninstall_portal_transforms">
   </genericsetup:importStep>
 
 </configure>

@@ -25,12 +25,29 @@ class RegistrationUtility(object):
                          "'%s' " % transform.__name__)
         transform_tool.registerTransform(transform)
 
+    def unregister_transform(self, transform_name):
+        transform_tool = getUtility(IPortalTransformsTool)
+        if hasattr(transform_tool, transform_name):
+            self.logger.info("Unregistering portal transform "
+                             "'%s' " % transform_name)
+            transform_tool.unregisterTransform(transform_name)
+
     def register_transform_policy(self, output_mimetype, required_transform):
         transform_tool = getUtility(IPortalTransformsTool)
         self.unregister_transform_policy(output_mimetype)
         self.logger.info("Registering transform policy "
                          "for type '%s'" % output_mimetype)
         transform_tool.manage_addPolicy(output_mimetype, [required_transform])
+
+    def unregister_transform_policy(self, output_mimetype):
+        transform_tool = getUtility(IPortalTransformsTool)
+        policies = [mimetype for (mimetype, required)
+                    in transform_tool.listPolicies()
+                    if mimetype == output_mimetype]
+        if policies:
+            self.logger.info("Unregistering transform policy "
+                             "for type '%s'" % output_mimetype)
+            transform_tool.manage_delPolicies([output_mimetype])
 
 
 # Handlers called with DirectoryImportContext by portal_setup tool
@@ -46,3 +63,16 @@ def install_portal_transforms(context):
     util = RegistrationUtility(site, logger)
     util.register_transform(Tika2TextTransform)
     util.register_transform_policy("text/plain", TIKA_TRANSFORM_NAME)
+
+
+def uninstall_portal_transforms(context):
+    """Unregisters portal transforms for Tika integration.
+    """
+    if context.readDataFile('ftw.tika.uninstall.txt') is None:
+        return
+    logger = context.getLogger('ftw.tika')
+    site = context.getSite()
+
+    util = RegistrationUtility(site, logger)
+    util.unregister_transform(TIKA_TRANSFORM_NAME)
+    util.unregister_transform_policy("text/plain")

@@ -23,3 +23,21 @@ class TestInstallation(TestCase):
         setup_tool.runAllImportStepsFromProfile('profile-ftw.tika:default',
                                                 purge_old=False)
 
+    def test_uninstall_profile_removes_transform(self):
+        portal = self.layer['portal']
+        setup_tool = getToolByName(portal, 'portal_setup')
+        portal_transforms = getToolByName(portal, 'portal_transforms')
+        setup_tool.runAllImportStepsFromProfile('profile-ftw.tika:uninstall',
+                                                purge_old=False)
+        self.assertNotIn('tika_to_plain_text', portal_transforms.keys())
+
+    def test_running_uninstall_profile_twice_shouldnt_cause_errors(self):
+        portal = self.layer['portal']
+        setup_tool = getToolByName(portal, 'portal_setup')
+
+        setup_tool.runAllImportStepsFromProfile('profile-ftw.tika:uninstall',
+                                                purge_old=False)
+
+        # Running the uninstall profile twice shouldn't cause any errors
+        setup_tool.runAllImportStepsFromProfile('profile-ftw.tika:uninstall',
+                                                purge_old=False)
