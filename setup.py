@@ -5,6 +5,7 @@ version = '1.0b1.dev0'
 
 tests_require = [
     'unittest2',
+    'ftw.testing',
     'plone.testing',
     'plone.app.testing',
     'Products.CMFCore',
@@ -46,6 +47,7 @@ setup(name='ftw.tika',
         'zope.component',
         'zope.interface',
         'zope.schema',
+        'ZODB3',
 
         # Plone
         'Products.GenericSetup',

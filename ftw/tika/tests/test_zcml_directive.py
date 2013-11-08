@@ -62,10 +62,13 @@ class TestZCMLDirective(TestCase):
         # Restore the original run_process function
         converter.run_process = _run_process
 
-    def test_invalid_jar_path_in_zcml_causes_trasnform_to_raise(self):
+    def test_invalid_jar_path_in_zcml_doesnt_cause_transform_to_raise(self):
         portal = self.layer['portal']
         transforms = getToolByName(portal, 'portal_transforms')
 
         # DON'T create the file specified by the ZCML directive
-        with self.assertRaises(TikaJarNotFound):
+        try:
             _ = transforms.convertTo('text/plain', '', mimetype=SOME_MIMETYPE)
+        except TikaJarNotFound, e:
+            self.fail("transform raised '%s: %s' unexpectedly!" % (
+                e.__class__.__name__, e))

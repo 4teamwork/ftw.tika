@@ -1,15 +1,18 @@
+from ftw.testing import MockTestCase
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
 from ftw.tika.testing import SOME_MIMETYPE
+from ftw.tika.tests.utils import RaisingConverter
 from ftw.tika.transforms.tika_to_plain_text import Tika2TextTransform
 from Products.CMFCore.utils import getToolByName
+from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import ITransform
-from unittest2 import TestCase
+from ZODB.POSException import ConflictError
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
 
-class TestTransforms(TestCase):
+class TestTransforms(MockTestCase):
 
     layer = FTW_TIKA_FUNCTIONAL_TESTING
 
@@ -19,9 +22,36 @@ class TestTransforms(TestCase):
         transform = Tika2TextTransform(name='tika_to_plain_text')
         verifyObject(ITransform, transform)
 
-    def test_transform_raises_if_jar_path_missing(self):
+    def test_transform_doesnt_raise_if_jar_path_missing(self):
         portal = self.layer['portal']
         transforms = getToolByName(portal, 'portal_transforms')
 
-        with self.assertRaises(TikaJarNotConfigured):
+        try:
             _ = transforms.convertTo('text/plain', '', mimetype=SOME_MIMETYPE)
+        except TikaJarNotConfigured, e:
+            self.fail("transform raised '%s: %s' unexpectedly!" % (
+                e.__class__.__name__, e))
+
+    def test_transform_doesnt_swallow_conflict_errors(self):
+        stream = datastream('dummy')
+
+        # Patch TikaConverter class to just raise a ConflictError
+        MockConverter = self.mocker.replace('ftw.tika.converter.TikaConverter')
+        self.expect(MockConverter()).result(RaisingConverter(ConflictError))
+        self.replay()
+
+        transform = Tika2TextTransform()
+        with self.assertRaises(ConflictError):
+            _ = transform.convert('', stream)
+
+    def test_transform_doesnt_swallow_keyboard_interrupts(self):
+        stream = datastream('dummy')
+
+        # Patch TikaConverter class to just raise a ConflictError
+        MockConverter = self.mocker.replace('ftw.tika.converter.TikaConverter')
+        self.expect(MockConverter()).result(RaisingConverter(KeyboardInterrupt))
+        self.replay()
+
+        transform = Tika2TextTransform()
+        with self.assertRaises(KeyboardInterrupt):
+            _ = transform.convert('', stream)

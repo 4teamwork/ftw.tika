@@ -1,10 +1,14 @@
 from ftw.tika.converter import TikaConverter
 from ftw.tika.mimetypes import OPENXML_MIMETYPES
 from Products.PortalTransforms.interfaces import ITransform
+from ZODB.POSException import ConflictError
 from zope.interface import implements
+import logging
 
 
 TIKA_TRANSFORM_NAME = 'tika_to_plain_text'
+
+logger = logging.getLogger('ftw.tika')
 
 
 class Tika2TextTransform(object):
@@ -36,7 +40,14 @@ class Tika2TextTransform(object):
 
     def convert(self, orig, data, filename=None, **kwargs):
         converter = TikaConverter()
-        plain_text = converter.convert(orig)
+        try:
+            plain_text = converter.convert(orig)
+        except (ConflictError, KeyboardInterrupt):
+            raise
+        except Exception, e:
+            logger.warn(e)
+            data.setData('')
+            return data
         data.setData(plain_text)
         return data
 
