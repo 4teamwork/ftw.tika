@@ -183,6 +183,25 @@ transformation to ``text/plain`` from one of the input formats supported by
                 mimetype=namedfile.contentType)
             plain_text = stream and stream.getData() or ''
 
+
+Caching
+-------
+
+If you want the result of the transform to be cached, you'll need to pass an
+object to `transform_tool.convertTo()` to store the cached result on:
+
+.. code:: python
+
+            stream = transform_tool.convertTo(
+                'text/plain',
+                namedfile.data,
+                mimetype=namedfile.contentType,
+                object=namedfile)
+
+
+Stand-alone converter
+---------------------
+
 The code calling Tika is encapsulated in its own class, so if for some reason
 you don't want to use the ``portal_transforms`` tool, you can also use the
 converter directly by just instanciating it:
