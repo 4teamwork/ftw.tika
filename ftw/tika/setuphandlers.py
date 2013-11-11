@@ -1,6 +1,7 @@
 from ftw.tika.transforms.tika_to_plain_text import Tika2TextTransform
 from ftw.tika.transforms.tika_to_plain_text import TIKA_TRANSFORM_NAME
 from Products.PortalTransforms.interfaces import IPortalTransformsTool
+from Products.PortalTransforms.utils import TransformException
 from zope.component import getUtility
 
 
@@ -34,10 +35,8 @@ class RegistrationUtility(object):
 
     def register_transform_policy(self, output_mimetype, required_transform):
         transform_tool = getUtility(IPortalTransformsTool)
-        self.unregister_transform_policy(output_mimetype)
-        self.logger.info("Registering transform policy "
-                         "for type '%s'" % output_mimetype)
-        transform_tool.manage_addPolicy(output_mimetype, [required_transform])
+        transform_tool.manage_addPolicy(output_mimetype,
+                                            [required_transform])
 
     def unregister_transform_policy(self, output_mimetype):
         transform_tool = getUtility(IPortalTransformsTool)
@@ -48,6 +47,40 @@ class RegistrationUtility(object):
             self.logger.info("Unregistering transform policy "
                              "for type '%s'" % output_mimetype)
             transform_tool.manage_delPolicies([output_mimetype])
+
+
+def install_tika_policy(util, logger):
+    """Install the transform policy for the tika_to_plain_text transform.
+
+    If this policy is already present from an earlier install, remove and
+    re-register it. If another policy for this output MIME type is present,
+    bail with a decent error message.
+    """
+
+    output_mimetype = 'text/plain'
+    required_transform = TIKA_TRANSFORM_NAME
+
+    transform_tool = getUtility(IPortalTransformsTool)
+    policies = [(mimetype, required) for (mimetype, required)
+                in transform_tool.listPolicies()
+                if mimetype == output_mimetype]
+
+    if len(policies) == 1 and policies[0][1] == (required_transform, ):
+        # That's our own policy (from a previous install)
+        # Unregister it before registering it again
+        util.unregister_transform_policy(output_mimetype)
+
+    try:
+        util.register_transform_policy(output_mimetype, TIKA_TRANSFORM_NAME)
+    except TransformException:
+        logger.error(
+            "There is already a transform policy for '%s' installed! "
+            "Please remove it first using the portal_transforms tool "
+            "before attempting to install ftw.tika." % output_mimetype)
+
+        raise TransformException(
+            "A policy for 'text/plain' already exists - please uninstall "
+            "it first if you want to install ftw.tika.")
 
 
 # Handlers called with DirectoryImportContext by portal_setup tool
@@ -62,7 +95,7 @@ def install_portal_transforms(context):
 
     util = RegistrationUtility(site, logger)
     util.register_transform(Tika2TextTransform)
-    util.register_transform_policy("text/plain", TIKA_TRANSFORM_NAME)
+    install_tika_policy(util, logger)
 
 
 def uninstall_portal_transforms(context):
