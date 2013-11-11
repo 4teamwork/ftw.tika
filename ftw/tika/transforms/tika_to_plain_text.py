@@ -38,10 +38,10 @@ class Tika2TextTransform(object):
             return self.config[attr]
         raise AttributeError(attr)
 
-    def convert(self, orig, data, filename=None, **kwargs):
+    def convert(self, orig, data, filename='', **kwargs):
         converter = TikaConverter()
         try:
-            plain_text = converter.convert(orig)
+            plain_text = converter.convert(orig, filename=filename)
         except (ConflictError, KeyboardInterrupt):
             raise
         except Exception, e:

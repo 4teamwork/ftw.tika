@@ -44,7 +44,7 @@ class TikaConverter(object):
             raise TikaJarNotFound(msg)
         return path
 
-    def convert(self, document):
+    def convert(self, document, filename=''):
         """Converts `document` to 'text/plain' using Apache Tika.
 
         `document` can either be an string or a file-like stream object.
@@ -63,7 +63,7 @@ class TikaConverter(object):
                         '-t', doc_file.name
                         ])
 
-        self.log.info("Converting document with Tika...")
+        self.log.info("Converting document '%s' with Tika..." % filename)
         try:
             stdout, stderr = run_process(cmd)
         except ProcessError, e:
