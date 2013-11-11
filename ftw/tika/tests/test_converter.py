@@ -1,23 +1,28 @@
+from ftw.testing import MockTestCase
 from ftw.tika.converter import TikaConverter
 from ftw.tika.exceptions import ProcessError
 from ftw.tika.exceptions import TikaConversionError
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
+from mocker import ARGS
 from StringIO import StringIO
-from unittest2 import TestCase
 import tempfile
 
 
-class TestConverter(TestCase):
+class TestConverter(MockTestCase):
 
     layer = FTW_TIKA_FUNCTIONAL_TESTING
 
     def test_converter_builds_correct_command_line(self):
-        # Monkey patch run_process helper
-        from ftw.tika import converter as _converter
-        _run_process = _converter.run_process
-        _converter.run_process = lambda cmd: (cmd, '')
+        # Patch run_process to just return stderr and the command line given
+
+        def return_cmd_line(cmd):
+            return (cmd, '')
+
+        mock_run_proc = self.mocker.replace('ftw.tika.converter.run_process')
+        self.expect(mock_run_proc(ARGS)).call(return_cmd_line)
+        self.replay()
 
         jar_path = '/bin/ls'
         tika_converter = TikaConverter(path=jar_path)
@@ -27,16 +32,13 @@ class TestConverter(TestCase):
         self.assertEquals(cmd_without_doc_filename,
                           ['java', '-jar', jar_path, '-t'])
 
-        # Restore the original run_process function
-        _converter.run_process = _run_process
-
     def test_converter_accepts_file_like_stream_object(self):
         sample_text = 'TEXT'
 
-        # Monkey patch run_process helper
-        from ftw.tika import converter as _converter
-        _run_process = _converter.run_process
-        _converter.run_process = lambda cmd: (sample_text, 'stderr')
+        # Patch run_process to just return sample output
+        mock_run_proc = self.mocker.replace('ftw.tika.converter.run_process')
+        self.expect(mock_run_proc(ARGS)).result((sample_text, 'stderr'))
+        self.replay()
 
         with tempfile.NamedTemporaryFile() as tmp_file:
             tika_converter = TikaConverter(path=tmp_file.name)
@@ -44,27 +46,20 @@ class TestConverter(TestCase):
 
         self.assertEquals(plain_text, sample_text)
 
-        # Restore the original run_process function
-        _converter.run_process = _run_process
-
     def test_process_error_causes_coverter_to_raise_conversion_error(self):
-        # Monkey patch run_process helper
-        from ftw.tika import converter as _converter
-        _run_process = _converter.run_process
+        # Patch run_process to just raise a ProcessError
 
         def raise_process_error(cmd):
             raise ProcessError
 
-        _converter.run_process = raise_process_error
+        mock_run_proc = self.mocker.replace('ftw.tika.converter.run_process')
+        self.expect(mock_run_proc(ARGS)).call(raise_process_error)
+        self.replay()
 
         with tempfile.NamedTemporaryFile() as tmp_file:
-
             with self.assertRaises(TikaConversionError):
                 tika_converter = TikaConverter(path=tmp_file.name)
                 _ = tika_converter.convert('')
-
-        # Restore the original run_process function
-        _converter.run_process = _run_process
 
     def test_missing_jar_path_causes_converter_to_raise(self):
         with self.assertRaises(TikaJarNotConfigured):

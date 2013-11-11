@@ -49,7 +49,8 @@ class TestTransforms(MockTestCase):
 
         # Patch TikaConverter class to just raise a ConflictError
         MockConverter = self.mocker.replace('ftw.tika.converter.TikaConverter')
-        self.expect(MockConverter()).result(RaisingConverter(KeyboardInterrupt))
+        self.expect(MockConverter()).result(
+            RaisingConverter(KeyboardInterrupt))
         self.replay()
 
         transform = Tika2TextTransform()

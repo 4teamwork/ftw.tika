@@ -11,5 +11,5 @@ class RaisingConverter(object):
     def __init__(self, exception):
         self.exception = exception
 
-    def convert(self, doc):
+    def convert(self, doc, *args, **kwargs):
         raise self.exception
