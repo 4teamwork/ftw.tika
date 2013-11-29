@@ -12,7 +12,7 @@ Supported Formats
 Input Formats
 -------------
 
-* XML based Microsoft Office document formats
+* Microsoft Office formats (Office Open XML)
 
   - ``*.docx`` Word Documents
   - ``*.dotx`` Word Templates
@@ -22,22 +22,25 @@ Input Formats
   - ``*.potx`` Powerpoint Templates
   - ``*.ppsx`` Powerpoint Slideshows
 
-See `mimetypes.py <https://github.com/4teamwork/ftw.tika/blob/master/ftw/tika/mimetypes.py>`_
-for details on the MIME types corresponding to these formats.
-
-
-Formats supported by Tika, but not wired up yet
------------------------------------------------
-
-* Binary Microsoft Office document formats
-* HyperText Markup Language
-* XML and derived formats
-* OpenDocument Format
-* Portable Document Format
-* Electronic Publication Format
+* Legacy Microsoft Office (97) formats
 * Rich Text Format
+* OpenOffice ODF formats
+* OpenOffice 1.x formats
+* Common Adobe formats (InDesig, Illustrator, Photoshop)
+* PDF documents
+* WordPerfect documents
+* E-Mail messages
+
+
+See the `mimetypes <https://github.com/4teamwork/ftw.tika/blob/master/ftw/tika/mimetypes/__init__.py>`_
+module for details on the MIME types corresponding to these formats.
+
+
+Formats supported by Tika, but not wired up (yet)
+-------------------------------------------------
+
+* Electronic Publication Format
 * Compression and packaging formats
-* Text formats
 * Audio formats
 * Image formats
 * Video formats
