@@ -26,7 +26,7 @@ Input Formats
 * Rich Text Format
 * OpenOffice ODF formats
 * OpenOffice 1.x formats
-* Common Adobe formats (InDesig, Illustrator, Photoshop)
+* Common Adobe formats (InDesign, Illustrator, Photoshop)
 * PDF documents
 * WordPerfect documents
 * E-Mail messages
@@ -190,8 +190,15 @@ transformation to ``text/plain`` from one of the input formats supported by
 Caching
 -------
 
-If you want the result of the transform to be cached, you'll need to pass an
-object to `transform_tool.convertTo()` to store the cached result on:
+If you want the result of the transform to be cached, you'll need to pass a
+persistent ZODB object to `transform_tool.convertTo()` to store the cached
+result on.
+
+For example, for a ``NamedBlobFile`` versioned with CMFEditions you'd
+use ``namedfile.data`` to access the data of the current working copy, and
+pass ``namedfile._blob`` as the object for the cache to be stored on (the
+``namedfile`` is always the same instance for any version, only the ``_blob``
+changes):
 
 .. code:: python
 
@@ -199,7 +206,7 @@ object to `transform_tool.convertTo()` to store the cached result on:
                 'text/plain',
                 namedfile.data,
                 mimetype=namedfile.contentType,
-                object=namedfile)
+                object=namedfile._blob)
 
 
 Stand-alone converter
