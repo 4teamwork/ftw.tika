@@ -1,11 +1,11 @@
+from ftw.tika.mimetypes import TYPES
 from ftw.tika.setuphandlers import RegistrationUtility
 from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
+from ftw.tika.transforms.tika_to_plain_text import TIKA_TRANSFORM_NAME
 from Products.CMFCore.utils import getToolByName
-from Products.PortalTransforms.interfaces import IPortalTransformsTool
-from unittest2 import TestCase
-from zope.component import getUtility
-import logging
 from Products.PortalTransforms.utils import TransformException
+from unittest2 import TestCase
+import logging
 
 
 logger = logging.getLogger('ftw.tika.tests')
@@ -19,6 +19,15 @@ class TestInstallation(TestCase):
         portal = self.layer['portal']
         portal_transforms = getToolByName(portal, 'portal_transforms')
         self.assertIn('tika_to_plain_text', portal_transforms.keys())
+
+    def test_transforms_input_types_are_complete_after_installation(self):
+        portal = self.layer['portal']
+        portal_transforms = getToolByName(portal, 'portal_transforms')
+        util = RegistrationUtility(portal, None)
+
+        transform = portal_transforms[TIKA_TRANSFORM_NAME]
+        filtered_types = list(util.filter_types_to_registered_ones_only(TYPES))
+        self.assertEquals(set(filtered_types), set(transform.inputs))
 
     def test_running_default_profile_twice_shouldnt_cause_errors(self):
         portal = self.layer['portal']
