@@ -1,6 +1,5 @@
 from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.testing import FtwTikaLayer
-from ftw.tika.testing import SOME_MIMETYPE
 from plone.app.testing import FunctionalTesting
 from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
@@ -53,7 +52,7 @@ class TestZCMLDirective(TestCase):
         with open(test_jar_path, 'w') as _:
             stream = transforms.convertTo('text/plain',
                                           '',
-                                          mimetype=SOME_MIMETYPE)
+                                          mimetype='application/pdf')
             plain_text = stream.getData()
         os.remove(test_jar_path)
 
@@ -68,7 +67,9 @@ class TestZCMLDirective(TestCase):
 
         # DON'T create the file specified by the ZCML directive
         try:
-            _ = transforms.convertTo('text/plain', '', mimetype=SOME_MIMETYPE)
+            _ = transforms.convertTo('text/plain',
+                                     '',
+                                     mimetype='application/pdf')
         except TikaJarNotFound, e:
             self.fail("transform raised '%s: %s' unexpectedly!" % (
                 e.__class__.__name__, e))

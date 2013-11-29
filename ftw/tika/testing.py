@@ -8,10 +8,6 @@ from plone.testing import Layer
 from zope.configuration import xmlconfig
 
 
-SOME_MIMETYPE = 'application/' \
-                'vnd.openxmlformats-officedocument.wordprocessingml.document'
-
-
 class UtilsLayer(Layer):
     """Bare bones layer for testing Plone agnostic utility functions.
     """

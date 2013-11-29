@@ -36,7 +36,7 @@ class RegistrationUtility(object):
     def register_transform_policy(self, output_mimetype, required_transform):
         transform_tool = getUtility(IPortalTransformsTool)
         transform_tool.manage_addPolicy(output_mimetype,
-                                            [required_transform])
+                                        [required_transform])
 
     def unregister_transform_policy(self, output_mimetype):
         transform_tool = getUtility(IPortalTransformsTool)

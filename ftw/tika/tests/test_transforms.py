@@ -1,7 +1,6 @@
 from ftw.testing import MockTestCase
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
-from ftw.tika.testing import SOME_MIMETYPE
 from ftw.tika.tests.utils import RaisingConverter
 from ftw.tika.transforms.tika_to_plain_text import Tika2TextTransform
 from Products.CMFCore.utils import getToolByName
@@ -27,7 +26,9 @@ class TestTransforms(MockTestCase):
         transforms = getToolByName(portal, 'portal_transforms')
 
         try:
-            _ = transforms.convertTo('text/plain', '', mimetype=SOME_MIMETYPE)
+            _ = transforms.convertTo('text/plain',
+                                     '',
+                                     mimetype='application/pdf')
         except TikaJarNotConfigured, e:
             self.fail("transform raised '%s: %s' unexpectedly!" % (
                 e.__class__.__name__, e))
