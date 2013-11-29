@@ -1,5 +1,4 @@
 from ftw.tika.converter import TikaConverter
-from ftw.tika.mimetypes import OPENXML_MIMETYPES
 from Products.PortalTransforms.interfaces import ITransform
 from ZODB.POSException import ConflictError
 from zope.interface import implements
@@ -7,6 +6,7 @@ import logging
 
 
 TIKA_TRANSFORM_NAME = 'tika_to_plain_text'
+INITIAL_TYPES = ['application/pdf']
 
 logger = logging.getLogger('ftw.tika')
 
@@ -21,7 +21,7 @@ class Tika2TextTransform(object):
     __name__ = TIKA_TRANSFORM_NAME
     output = "text/plain"
 
-    def __init__(self, name=None, inputs=(OPENXML_MIMETYPES)):
+    def __init__(self, name=None, inputs=INITIAL_TYPES):
         self.config = {'inputs': inputs}
         self.config_metadata = {
             'inputs': ('list', 'Inputs',

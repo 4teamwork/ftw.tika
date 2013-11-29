@@ -1,5 +1,7 @@
+from ftw.tika.mimetypes import TYPES
 from ftw.tika.transforms.tika_to_plain_text import Tika2TextTransform
 from ftw.tika.transforms.tika_to_plain_text import TIKA_TRANSFORM_NAME
+from Products.CMFCore.utils import getToolByName
 from Products.PortalTransforms.interfaces import IPortalTransformsTool
 from Products.PortalTransforms.utils import TransformException
 from zope.component import getUtility
@@ -36,7 +38,7 @@ class RegistrationUtility(object):
     def register_transform_policy(self, output_mimetype, required_transform):
         transform_tool = getUtility(IPortalTransformsTool)
         transform_tool.manage_addPolicy(output_mimetype,
-                                            [required_transform])
+                                        [required_transform])
 
     def unregister_transform_policy(self, output_mimetype):
         transform_tool = getUtility(IPortalTransformsTool)
@@ -47,6 +49,23 @@ class RegistrationUtility(object):
             self.logger.info("Unregistering transform policy "
                              "for type '%s'" % output_mimetype)
             transform_tool.manage_delPolicies([output_mimetype])
+
+    def filter_types_to_registered_ones_only(self, types):
+        registry = getToolByName(self.context, 'mimetypes_registry')
+        for mimetype in types:
+            mts = registry.lookup(mimetype)
+            if mts:
+                yield mimetype
+
+    def update_input_types(self, transform_name, types):
+        transform_tool = getUtility(IPortalTransformsTool)
+        transform = transform_tool[transform_name]
+        transform.inputs = types[:]
+        transform._config['inputs'] = types[:]
+        # Update the portal_transform tool's internal _mtmap
+        transform_tool._mapTransform(transform)
+        self.logger.info(
+            "Updated input types for transform '%s'." % transform_name)
 
 
 def install_tika_policy(util, logger):
@@ -95,6 +114,12 @@ def install_portal_transforms(context):
 
     util = RegistrationUtility(site, logger)
     util.register_transform(Tika2TextTransform)
+
+    # Filter supported types to only those available in Plone's MIME type
+    # registry in order to not cause exceptions during transform registration
+    types = list(util.filter_types_to_registered_ones_only(TYPES))
+    util.update_input_types(TIKA_TRANSFORM_NAME, types)
+
     install_tika_policy(util, logger)
 
 
