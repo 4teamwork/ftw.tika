@@ -82,9 +82,8 @@ buildout:
 
 This will download the Tika app JAR to
 ``${buildout:directory}/parts/tika/tika.jar``. You can configure this path
-for ``ftw.tika`` directly from buildout using the
-`ZCML directive <#configuration-in-zcml>`_
-described below:
+for ``ftw.tika`` directly from buildout using the ZCML directive described
+below:
 
 .. code:: ini
 
