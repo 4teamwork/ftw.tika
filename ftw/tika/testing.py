@@ -1,3 +1,4 @@
+from ftw.testing import ComponentRegistryLayer
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
@@ -5,6 +6,17 @@ from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
 from zope.configuration import xmlconfig
+
+
+class MetaZCMLLayer(ComponentRegistryLayer):
+
+    def setUp(self):
+        super(MetaZCMLLayer, self).setUp()
+        import ftw.tika
+        self.load_zcml_file('meta.zcml', ftw.tika)
+
+
+META_ZCML = MetaZCMLLayer()
 
 
 class FtwTikaLayer(PloneSandboxLayer):
