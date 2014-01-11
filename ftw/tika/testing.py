@@ -33,7 +33,7 @@ class FtwTikaLayer(PloneSandboxLayer):
                        context=configurationContext)
 
         # os.getcwd() -> .../parts/test
-        path = os.path.join(os.getcwd(), '..', 'tika', 'tika.jar')
+        path = os.path.join(os.getcwd(), '..', 'tika-download', 'tika.jar')
         self['tika_config'] = {'path': path,
                                'port': os.environ.get('PORT1', '55007')}
 
