@@ -57,16 +57,16 @@ class TestConverter(MockTestCase):
         self.replay()
 
         with tempfile.NamedTemporaryFile() as tmp_file:
+            tika_converter = TikaConverter(path=tmp_file.name)
             with self.assertRaises(TikaConversionError):
-                tika_converter = TikaConverter(path=tmp_file.name)
-                _ = tika_converter.convert('')
+                tika_converter.convert('')
 
     def test_missing_jar_path_causes_converter_to_raise(self):
+        tika_converter = TikaConverter()
         with self.assertRaises(TikaJarNotConfigured):
-            tika_converter = TikaConverter()
-            _ = tika_converter.convert('')
+            tika_converter.convert('')
 
     def test_invalid_jar_path_causes_converter_to_raise(self):
+        tika_converter = TikaConverter(path="/nonexistent")
         with self.assertRaises(TikaJarNotFound):
-            tika_converter = TikaConverter(path="/nonexistent")
-            _ = tika_converter.convert('')
+            tika_converter.convert('')

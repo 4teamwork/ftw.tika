@@ -26,12 +26,12 @@ class TestTransforms(MockTestCase):
         transforms = getToolByName(portal, 'portal_transforms')
 
         try:
-            _ = transforms.convertTo('text/plain',
-                                     '',
-                                     mimetype='application/pdf')
+            transforms.convertTo('text/plain',
+                                 '',
+                                 mimetype='application/pdf')
         except TikaJarNotConfigured, e:
             self.fail("transform raised '%s: %s' unexpectedly!" % (
-                e.__class__.__name__, e))
+                    e.__class__.__name__, e))
 
     def test_transform_doesnt_swallow_conflict_errors(self):
         stream = datastream('dummy')
@@ -43,7 +43,7 @@ class TestTransforms(MockTestCase):
 
         transform = Tika2TextTransform()
         with self.assertRaises(ConflictError):
-            _ = transform.convert('', stream)
+            transform.convert('', stream)
 
     def test_transform_doesnt_swallow_keyboard_interrupts(self):
         stream = datastream('dummy')
@@ -56,4 +56,4 @@ class TestTransforms(MockTestCase):
 
         transform = Tika2TextTransform()
         with self.assertRaises(KeyboardInterrupt):
-            _ = transform.convert('', stream)
+            transform.convert('', stream)

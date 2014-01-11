@@ -49,7 +49,7 @@ class TestZCMLDirective(TestCase):
         converter.run_process = lambda cmd: ('TEXT', 'stderr')
 
         # Create the file specified by the ZCML directive
-        with open(test_jar_path, 'w') as _:
+        with open(test_jar_path, 'w'):
             stream = transforms.convertTo('text/plain',
                                           '',
                                           mimetype='application/pdf')
@@ -67,9 +67,9 @@ class TestZCMLDirective(TestCase):
 
         # DON'T create the file specified by the ZCML directive
         try:
-            _ = transforms.convertTo('text/plain',
-                                     '',
-                                     mimetype='application/pdf')
+            transforms.convertTo('text/plain',
+                                 '',
+                                 mimetype='application/pdf')
         except TikaJarNotFound, e:
             self.fail("transform raised '%s: %s' unexpectedly!" % (
-                e.__class__.__name__, e))
+                    e.__class__.__name__, e))
