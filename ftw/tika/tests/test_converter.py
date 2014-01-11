@@ -1,12 +1,15 @@
+from StringIO import StringIO
 from ftw.testing import MockTestCase
 from ftw.tika.converter import TikaConverter
 from ftw.tika.exceptions import ProcessError
 from ftw.tika.exceptions import TikaConversionError
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.exceptions import TikaJarNotFound
+from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
 from mocker import ARGS
-from StringIO import StringIO
+from zope.component import getGlobalSiteManager
+from zope.component import getUtility
 import tempfile
 
 
@@ -62,9 +65,16 @@ class TestConverter(MockTestCase):
                 tika_converter.convert('')
 
     def test_missing_jar_path_causes_converter_to_raise(self):
-        tika_converter = TikaConverter()
-        with self.assertRaises(TikaJarNotConfigured):
-            tika_converter.convert('')
+        # Since the path is configured in the IZCMLTikaConfig from the ZCML
+        # loaded in the testing layer, we need to unregister the config for
+        # this test to verify the exception.
+        config = getUtility(IZCMLTikaConfig)
+        getGlobalSiteManager().unregisterUtility(provided=IZCMLTikaConfig)
+        try:
+            with self.assertRaises(TikaJarNotConfigured):
+                TikaConverter().convert('')
+        finally:
+            getGlobalSiteManager().registerUtility(component=config)
 
     def test_invalid_jar_path_causes_converter_to_raise(self):
         tika_converter = TikaConverter(path="/nonexistent")

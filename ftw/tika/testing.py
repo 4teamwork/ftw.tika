@@ -6,6 +6,7 @@ from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
 from zope.configuration import xmlconfig
+import os
 
 
 class MetaZCMLLayer(ComponentRegistryLayer):
@@ -27,6 +28,15 @@ class FtwTikaLayer(PloneSandboxLayer):
         import ftw.tika
         xmlconfig.file('configure.zcml', ftw.tika,
                        context=configurationContext)
+
+        # os.getcwd() -> .../parts/test
+        config = {'path': os.path.join(os.getcwd(), '..', 'tika', 'tika.jar')}
+
+        xmlconfig.string(
+            '<configure xmlns:tika="http://namespaces.plone.org/tika">' +
+            '  <tika:config path="%(path)s" />' % config +
+            '</configure>',
+            context=configurationContext)
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.tika:default')
