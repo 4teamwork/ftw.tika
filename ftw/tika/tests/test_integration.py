@@ -1,6 +1,9 @@
 from Products.CMFCore.utils import getToolByName
+from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
+from ftw.tika.testing import TIKA_SERVER_INTEGRATION_TESTING
 from unittest2 import TestCase
+from zope.component import getUtility
 from zope.component.hooks import getSite
 import os.path
 
@@ -24,6 +27,19 @@ def convert_asset(filename):
 class TestConversion(TestCase):
 
     layer = FTW_TIKA_INTEGRATION_TESTING
+
+    def test_docx_conversion(self):
+        self.assertEquals('Lorem Ipsum', convert_asset('lorem.docx'))
+
+
+class TestServerConversion(TestCase):
+
+    layer = TIKA_SERVER_INTEGRATION_TESTING
+
+    def setUp(self):
+        # Remove the tika path for disabling the local conversion fallback.
+        # This allows us to detect when it could not be converted by the server.
+        getUtility(IZCMLTikaConfig).path = None
 
     def test_docx_conversion(self):
         self.assertEquals('Lorem Ipsum', convert_asset('lorem.docx'))

@@ -60,13 +60,101 @@ Output Formats
 Installation
 ============
 
-Dependencies
-------------
+The preferred method to run tika is as a daemon. Although it is possible
+to run tika without a daemon (by booting it up for each time a file is
+converted), the daemon is a lot faster.
 
-``ftw.tika`` expects to be provided with the path to an installed Tika JAR
-file. So either install Tika yourself first, or use the supplied
-`tika.cfg <https://github.com/4teamwork/ftw.tika/blob/master/tika.cfg>`_
-buildout:
+Both methods require the tika jar to be downloaded and a ZCML configuration
+of ``ftw.tika``.
+
+Below are some configuration examples.
+
+Daemon buildout example
+-----------------------
+
+.. code:: ini
+
+    [buildout]
+    parts +=
+        tika-download
+        tika-server
+
+
+    [instance0]
+    zcml-additional += ${tika:zcml}
+    eggs += ftw.tika
+
+
+    [tika]
+    server-port = 8077
+    zcml =
+        <configure xmlns:tika="http://namespaces.plone.org/tika">
+            <tika:config path="${tika-download:destination}/${tika-download:filename}"
+                         port="${tika:server-port}" />
+        </configure>
+
+
+    [tika-download]
+    recipe = hexagonit.recipe.download
+    url = http://mirror.switch.ch/mirror/apache/dist/tika/tika-app-1.4.jar
+    download-only = true
+    filename = tika.jar
+
+
+    [tika-server]
+    recipe = collective.recipe.scriptgen
+    cmd = java
+    arguments = -jar ${tika-download:destination}/${tika-download:filename} --server --port ${tika:server-port} --text
+
+
+    [supervisor]
+    programs +=
+        20 tika-server (stopasgroup=true) ${buildout:bin-directory}/tika-server true zope
+
+
+How it works:
+
+- The ``tika-download`` part downloads the tika jar and places it
+  at ``./parts/tika-download/tika.jar``.
+- The ``tika-server`` part creates a ``bin/tika-server`` script which already
+  includes the port configuration defined in the ``tika`` part.
+- The ``instance0`` part is expected to be the Plone instance part and is
+  extended with the ZCML configuration for ``ftw.tika``
+- A supervisor configuration example is also included in the ``supervisor``
+  part.
+
+If your deployment buildout bases on the deployment buildouts included
+in the `ftw-buildouts`_ repository on github, you can simply extend the
+``tika-server.cfg`` and you have everything configured:
+
+.. code:: ini
+
+    [buildout]
+    extends =
+        https://raw.github.com/4teamwork/ftw-buildouts/master/production.cfg
+        https://raw.github.com/4teamwork/ftw-buildouts/master/zeoclients/4.cfg
+        https://raw.github.com/4teamwork/ftw-buildouts/master/tika-server.cfg
+
+    deployment-number = 05
+
+    filestorage-parts =
+        www.mywebsite.com
+
+    instance-eggs =
+        mywebsite
+
+
+Non-daemon buildout example
+---------------------------
+
+Note that running tika in non-daemon mode is very, very slow!
+
+When you dont want to use tika as daemon, you can simply just configure
+the path to the tika.jar in the ``ftw.tika`` ZCML configuration and it will
+fire up tika.jar (in a new JVM) every time something needs to be converted.
+
+Here is a short example of how to download the tika.jar and configuring
+``ftw.tika`` with buildout:
 
 .. code:: ini
 
@@ -80,25 +168,19 @@ buildout:
     download-only = true
     filename = tika.jar
 
-This will download the Tika app JAR to
-``${buildout:directory}/parts/tika/tika.jar``. You can configure this path
-for ``ftw.tika`` directly from buildout using the ZCML directive described
-below:
-
-.. code:: ini
-
     [instance]
+    eggs += ftw.tika
     zcml-additional =
         <configure xmlns:tika="http://namespaces.plone.org/tika">
             <tika:config path="${tika:destination}/${tika:filename}" />
         </configure>
 
 
-Installing ftw.tika
--------------------
+Installing ftw.tika in Plone
+----------------------------
 
 - Install ``ftw.tika`` by adding it to the list of eggs in your buildout.
-  Then run buildout and restart your instance:
+  (The buildout examples above include adding ``ftw.tika`` to the eggs).
 
 .. code:: ini
 
@@ -106,6 +188,7 @@ Installing ftw.tika
     eggs +=
         ftw.tika
 
+- Run buildout and start your instance
 
 - Go to Site Setup of your Plone site and activate the ``ftw.tika`` add-on,
   or depend on the ``ftw.tika:default`` profile from your package's
@@ -244,3 +327,6 @@ Copyright
 This package is copyright by `4teamwork <http://www.4teamwork.ch/>`_.
 
 ``ftw.tika`` is licensed under GNU General Public License, version 2.
+
+
+.. _ftw-buildouts: https://github.com/4teamwork/ftw-buildouts#production

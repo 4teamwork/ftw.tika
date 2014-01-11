@@ -4,8 +4,12 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
+from plone.testing import Layer
+from subprocess import Popen
+from threading import Thread
 from zope.configuration import xmlconfig
 import os
+import time
 
 
 class MetaZCMLLayer(ComponentRegistryLayer):
@@ -29,11 +33,14 @@ class FtwTikaLayer(PloneSandboxLayer):
                        context=configurationContext)
 
         # os.getcwd() -> .../parts/test
-        config = {'path': os.path.join(os.getcwd(), '..', 'tika', 'tika.jar')}
+        path = os.path.join(os.getcwd(), '..', 'tika', 'tika.jar')
+        self['tika_config'] = {'path': path,
+                               'port': os.environ.get('PORT1', '55007')}
 
         xmlconfig.string(
             '<configure xmlns:tika="http://namespaces.plone.org/tika">' +
-            '  <tika:config path="%(path)s" />' % config +
+            '<tika:config path="%(path)s" port="%(port)s" />' % (
+                self['tika_config']) +
             '</configure>',
             context=configurationContext)
 
@@ -48,3 +55,30 @@ FTW_TIKA_FIXTURE = FtwTikaLayer()
 FTW_TIKA_INTEGRATION_TESTING = IntegrationTesting(
     bases=(FTW_TIKA_FIXTURE,),
     name="FtwTika:Integration")
+
+
+class TikaServerLayer(Layer):
+
+    defaultBases = (FTW_TIKA_FIXTURE, )
+
+    def setUp(self):
+        self.start_server()
+
+    def tearDown(self):
+        self.stop_server()
+
+    def start_server(self):
+        command = 'java -jar %(path)s --text --server --port %(port)s' % (
+            self['tika_config'])
+        self.process = Popen(command, shell=True)
+        Thread(target=self.process.communicate).start()
+        time.sleep(0.5)  # give tika some time to boot
+
+    def stop_server(self):
+        if getattr(self, 'process', None) is not None:
+            self.process.terminate()
+
+TIKA_SERVER_FIXTURE = TikaServerLayer()
+TIKA_SERVER_INTEGRATION_TESTING = IntegrationTesting(
+    bases=(TIKA_SERVER_FIXTURE,),
+    name='FtwTika:server:Integration')

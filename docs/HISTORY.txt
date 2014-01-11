@@ -5,7 +5,10 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add support for running tika as a deamon.
+  The deamon speeds up the conversion from approximately
+  1.1 seconds per document to 0.06 seconds.
+  [jone]
 
 
 1.0 (2013-11-29)
