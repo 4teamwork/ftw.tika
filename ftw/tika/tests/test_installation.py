@@ -1,6 +1,6 @@
 from ftw.tika.mimetypes import TYPES
 from ftw.tika.setuphandlers import RegistrationUtility
-from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
+from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
 from ftw.tika.transforms.tika_to_plain_text import TIKA_TRANSFORM_NAME
 from Products.CMFCore.utils import getToolByName
 from Products.PortalTransforms.utils import TransformException
@@ -13,7 +13,7 @@ logger = logging.getLogger('ftw.tika.tests')
 
 class TestInstallation(TestCase):
 
-    layer = FTW_TIKA_FUNCTIONAL_TESTING
+    layer = FTW_TIKA_INTEGRATION_TESTING
 
     def test_default_profile_registers_transform(self):
         portal = self.layer['portal']

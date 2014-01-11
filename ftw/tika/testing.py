@@ -1,5 +1,4 @@
 from ftw.testing import ComponentRegistryLayer
-from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
@@ -49,6 +48,3 @@ FTW_TIKA_FIXTURE = FtwTikaLayer()
 FTW_TIKA_INTEGRATION_TESTING = IntegrationTesting(
     bases=(FTW_TIKA_FIXTURE,),
     name="FtwTika:Integration")
-FTW_TIKA_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(FTW_TIKA_FIXTURE,),
-    name='FtwTika:Functional')

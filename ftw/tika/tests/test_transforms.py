@@ -1,6 +1,6 @@
 from ftw.testing import MockTestCase
 from ftw.tika.exceptions import TikaJarNotConfigured
-from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
+from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
 from ftw.tika.tests.utils import RaisingConverter
 from ftw.tika.transforms.tika_to_plain_text import Tika2TextTransform
 from Products.CMFCore.utils import getToolByName
@@ -13,7 +13,7 @@ from zope.interface.verify import verifyObject
 
 class TestTransforms(MockTestCase):
 
-    layer = FTW_TIKA_FUNCTIONAL_TESTING
+    layer = FTW_TIKA_INTEGRATION_TESTING
 
     def test_transform_conforms_to_interface(self):
         verifyClass(ITransform, Tika2TextTransform)

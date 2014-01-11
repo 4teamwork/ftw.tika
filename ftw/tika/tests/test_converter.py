@@ -6,7 +6,7 @@ from ftw.tika.exceptions import TikaConversionError
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.interfaces import IZCMLTikaConfig
-from ftw.tika.testing import FTW_TIKA_FUNCTIONAL_TESTING
+from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
 from mocker import ARGS
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility
@@ -15,7 +15,7 @@ import tempfile
 
 class TestConverter(MockTestCase):
 
-    layer = FTW_TIKA_FUNCTIONAL_TESTING
+    layer = FTW_TIKA_INTEGRATION_TESTING
 
     def test_converter_builds_correct_command_line(self):
         # Patch run_process to just return stderr and the command line given
