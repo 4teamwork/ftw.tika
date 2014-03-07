@@ -1,16 +1,22 @@
-from plone.app.testing import applyProfile
-from plone.app.testing import FunctionalTesting
+from ftw.testing import ComponentRegistryLayer
 from plone.app.testing import IntegrationTesting
-from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
-from plone.testing import Layer
 from zope.configuration import xmlconfig
+import os
 
 
-class UtilsLayer(Layer):
-    """Bare bones layer for testing Plone agnostic utility functions.
-    """
+class MetaZCMLLayer(ComponentRegistryLayer):
+
+    def setUp(self):
+        super(MetaZCMLLayer, self).setUp()
+        import ftw.tika
+        self.load_zcml_file('meta.zcml', ftw.tika)
+
+
+META_ZCML = MetaZCMLLayer()
 
 
 class FtwTikaLayer(PloneSandboxLayer):
@@ -21,6 +27,15 @@ class FtwTikaLayer(PloneSandboxLayer):
         import ftw.tika
         xmlconfig.file('configure.zcml', ftw.tika,
                        context=configurationContext)
+
+        # os.getcwd() -> .../parts/test
+        config = {'path': os.path.join(os.getcwd(), '..', 'tika', 'tika.jar')}
+
+        xmlconfig.string(
+            '<configure xmlns:tika="http://namespaces.plone.org/tika">' +
+            '  <tika:config path="%(path)s" />' % config +
+            '</configure>',
+            context=configurationContext)
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.tika:default')
@@ -33,9 +48,3 @@ FTW_TIKA_FIXTURE = FtwTikaLayer()
 FTW_TIKA_INTEGRATION_TESTING = IntegrationTesting(
     bases=(FTW_TIKA_FIXTURE,),
     name="FtwTika:Integration")
-FTW_TIKA_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(FTW_TIKA_FIXTURE,),
-    name='FtwTika:Functional')
-
-
-UTILS_LAYER = UtilsLayer()

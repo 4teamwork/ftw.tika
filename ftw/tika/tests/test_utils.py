@@ -1,12 +1,9 @@
 from ftw.tika.exceptions import ProcessError
-from ftw.tika.testing import UTILS_LAYER
 from ftw.tika.utils import run_process
 from unittest2 import TestCase
 
 
 class TestUtils(TestCase):
-
-    layer = UTILS_LAYER
 
     def test_run_process_returns_stdout_and_stderr(self):
         cmd = "echo stdout; echo stderr 1>&2"
