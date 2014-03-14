@@ -1,4 +1,5 @@
 from ftw.testing import ComponentRegistryLayer
+from ftw.tika.interfaces import IZCMLTikaConfig
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
@@ -7,6 +8,7 @@ from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
 from plone.testing import Layer
 from subprocess import Popen
 from threading import Thread
+from zope.component import getUtility
 from zope.configuration import xmlconfig
 import os
 import time
@@ -39,7 +41,7 @@ class FtwTikaLayer(PloneSandboxLayer):
 
         xmlconfig.string(
             '<configure xmlns:tika="http://namespaces.plone.org/tika">' +
-            '<tika:config path="%(path)s" port="%(port)s" />' % (
+            '<tika:config path="%(path)s" />' % (
                 self['tika_config']) +
             '</configure>',
             context=configurationContext)
@@ -66,6 +68,19 @@ class TikaServerLayer(Layer):
 
     def tearDown(self):
         self.stop_server()
+
+    def testSetUp(self):
+        # We explicitly remove the path for disabling fallback to
+        # standalone method, so that we can make sure that the server
+        # is actually used in this layer.
+        tika_config = getUtility(IZCMLTikaConfig)
+        tika_config.path = None
+        tika_config.port = int(self['tika_config']['port'])
+
+    def testTearDown(self):
+        tika_config = getUtility(IZCMLTikaConfig)
+        tika_config.path = self['tika_config']['path']
+        tika_config.port = None
 
     def start_server(self):
         command = 'java -jar %(path)s --text --server --port %(port)s' % (
