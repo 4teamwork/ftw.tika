@@ -1,6 +1,8 @@
-from ftw.tika.converter import TikaConverter
 from Products.PortalTransforms.interfaces import ITransform
 from ZODB.POSException import ConflictError
+from ftw.tika import mimetypes
+from ftw.tika.converter import TikaConverter
+from ftw.tika.exceptions import TikaConversionError
 from zope.interface import implements
 import logging
 
@@ -38,18 +40,41 @@ class Tika2TextTransform(object):
             return self.config[attr]
         raise AttributeError(attr)
 
-    def convert(self, orig, data, filename='', **kwargs):
+    def convert(self, orig, data, filename='', mimetype=None, **kwargs):
         converter = TikaConverter()
         try:
             plain_text = converter.convert(orig, filename=filename)
+
         except (ConflictError, KeyboardInterrupt):
             raise
-        except Exception, e:
-            logger.warn(e)
-            data.setData('')
-            return data
+
+        except TikaConversionError, exc:
+            self._log_conversion_error(exc, mimetype=mimetype)
+            plain_text = ''
+
+        except Exception, exc:
+            logger.warn(exc)
+            plain_text = ''
+
         data.setData(plain_text)
         return data
+
+    def _log_conversion_error(self, exc, mimetype):
+        if ((mimetype in mimetypes.PDF_TYPES and
+             self._is_pdf_protected_exception(exc))
+            or (mimetype in mimetypes.MS_OFFICE_TYPES and
+                self._is_msoffice_protected_exception(exc))):
+            logger.info('Could not convert password protected document.')
+
+        else:
+            logger.warn(exc)
+
+    def _is_pdf_protected_exception(self, exc):
+        return ('Error: The supplied password does not match either the'
+                ' owner or user password in the document.' in str(exc))
+
+    def _is_msoffice_protected_exception(self, exc):
+        return 'poi.poifs.crypt.AgileDecryptor.verifyPassword(' in str(exc)
 
 
 def register():

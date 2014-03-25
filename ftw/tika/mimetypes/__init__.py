@@ -4,6 +4,17 @@ If you update any type definitions in here, please make sure you also update
 the README accordingly.
 """
 
+PDF_TYPES = [
+    # PDF documents
+    'application/pdf',
+    'application/x-pdf',
+    'image/pdf',
+    'application/x-gzpdf',
+    'application/x-bzpdf',
+    'application/postscript',
+    'application/x-gzpostscript',
+    ]
+
 
 TYPES = [
 # Microsoft Office formats (Office Open XML)
@@ -68,15 +79,6 @@ TYPES = [
 'application/illustrator',
 'image/x-photoshop',
 
-# PDF documents
-'application/pdf',
-'application/x-pdf',
-'image/pdf',
-'application/x-gzpdf',
-'application/x-bzpdf',
-'application/postscript',
-'application/x-gzpostscript',
-
 # Other office formats
 'application/vnd.wordperfect',
 'application/x-wordperfect',
@@ -84,4 +86,9 @@ TYPES = [
 
 # E-Mail messages
 'message/rfc822',
-]
+] + PDF_TYPES
+
+
+MS_OFFICE_TYPES = [
+    mt for mt in TYPES
+    if mt.startswith('application/vnd.openxmlformats-officedocument.')]

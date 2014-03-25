@@ -4,11 +4,12 @@ import os
 version = '1.1.1.dev0'
 
 tests_require = [
-    'unittest2',
-    'ftw.testing',
-    'plone.testing',
-    'plone.app.testing',
     'Products.CMFCore',
+    'ftw.testing',
+    'plone.app.testing',
+    'plone.testing',
+    'testfixtures',
+    'unittest2',
     'zope.configuration',
     ]
 
