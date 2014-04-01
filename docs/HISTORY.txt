@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1.1 (unreleased)
+1.1.1 (2014-04-01)
 ------------------
 
 - Only log a warning on protected PDFs / MS Office documents.
