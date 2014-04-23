@@ -5,7 +5,9 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Updated tika to version 1.5.
+  Updated detection of protected office files.
+  [lknoepfel]
 
 
 1.1.1 (2014-04-01)

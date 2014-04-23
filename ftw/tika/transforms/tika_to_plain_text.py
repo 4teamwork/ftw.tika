@@ -74,7 +74,7 @@ class Tika2TextTransform(object):
                 ' owner or user password in the document.' in str(exc))
 
     def _is_msoffice_protected_exception(self, exc):
-        return 'poi.poifs.crypt.AgileDecryptor.verifyPassword(' in str(exc)
+        return 'org.apache.tika.exception.EncryptedDocumentException' in str(exc)
 
 
 def register():
