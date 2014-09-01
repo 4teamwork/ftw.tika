@@ -5,6 +5,9 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
+- Changed tika source to archive.apache.org.
+  [lknoepfel]
+
 - Extend integration tests to test conversion of all common
   formats we claim to support.
   [lgraf]
