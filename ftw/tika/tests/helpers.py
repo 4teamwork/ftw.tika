@@ -7,6 +7,15 @@ ASSETS = os.path.join(os.path.dirname(__file__), 'assets')
 OFFICE_MIME = 'application/vnd.openxmlformats-officedocument.'
 MIMETYPES_BY_EXTENSION = {
     '.docx': '%swordprocessingml.document' % OFFICE_MIME,
+    '.doc': 'application/msword',
+    '.xlsx': '%sspreadsheetml.sheet' % OFFICE_MIME,
+    '.xls': 'application/msexcel',
+    '.pptx': '%spresentationml.presentation' % OFFICE_MIME,
+    '.ppt': 'application/mspowerpoint',
+    '.rtf': 'application/rtf',
+    '.odt': 'application/vnd.oasis.opendocument.text',
+    '.sxw': 'application/vnd.sun.xml.writer',
+    '.eml': 'message/rfc822',
     '.pdf': 'application/pdf'}
 
 
