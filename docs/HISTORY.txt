@@ -5,6 +5,10 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
+- Extend integration tests to test conversion of all common
+  formats we claim to support.
+  [lgraf]
+
 - Updated tika to version 1.5.
   Updated detection of protected office files.
   [lknoepfel]
