@@ -60,72 +60,65 @@ Output Formats
 Installation
 ============
 
-The preferred method to run tika is as a daemon. Although it is possible
-to run tika without a daemon (by booting it up for each time a file is
-converted), the daemon is a lot faster.
+The preferred method to run the Tika JAX-RS server as a daemon. Although it is
+possible to run Tika without a daemon (by booting it up for each time a file
+is converted), the daemon is a lot faster.
 
-Both methods require the tika jar to be downloaded and a ZCML configuration
-of ``ftw.tika``.
+Both methods require ``tika-app.jar`` to be downloaded and some ZCML
+configuration for ``ftw.tika``. The daemon method also requires the JAX-RS
+``tika-server.app`` to be downloaded.
 
 Below are some configuration examples.
 
 Daemon buildout example
 -----------------------
 
+See the included `tika.cfg`_ for a deamon example that you can adjust as
+necessary, copy into your buildout and extend from:
+
 .. code:: ini
 
     [buildout]
     parts +=
         tika-app-download
+        tika-server-download
         tika-server
 
-
-    [instance0]
-    zcml-additional += ${tika:zcml}
-    eggs += ftw.tika
-
-
     [tika]
-    server-port = 8077
+    server-port = 9998
     zcml =
         <configure xmlns:tika="http://namespaces.plone.org/tika">
             <tika:config path="${tika-app-download:destination}/${tika-app-download:filename}"
                          port="${tika:server-port}" />
         </configure>
 
-
     [tika-app-download]
     recipe = hexagonit.recipe.download
-    url = http://mirror.switch.ch/mirror/apache/dist/tika/tika-app-1.4.jar
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.5/tika-app-1.5.jar
+    md5sum = 2124a77289efbb30e7228c0f7da63373
     download-only = true
     filename = tika-app.jar
 
+    [tika-server-download]
+    recipe = hexagonit.recipe.download
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-server/1.5/tika-server-1.5.jar
+    md5sum = 0f70548f233ead7c299bf7bc73bfec26
+    download-only = true
+    filename = tika-server.jar
 
     [tika-server]
     recipe = collective.recipe.scriptgen
     cmd = java
-    arguments = -jar ${tika-app-download:destination}/${tika-app-download:filename} --server --port ${tika:server-port} --text
+    arguments = -jar ${tika-server-download:destination}/${tika-server-download:filename} --port ${tika:server-port}
+
+    [instance]
+    zcml-additional = ${tika:zcml}
+    eggs += ftw.tika
 
 
-    [supervisor]
-    programs +=
-        20 tika-server (stopasgroup=true) ${buildout:bin-directory}/tika-server true zope
-
-
-How it works:
-
-- The ``tika-download`` part downloads the tika jar and places it
-  at ``./parts/tika-download/tika-app.jar``.
-- The ``tika-server`` part creates a ``bin/tika-server`` script which already
-  includes the port configuration defined in the ``tika`` part.
-- The ``instance0`` part is expected to be the Plone instance part and is
-  extended with the ZCML configuration for ``ftw.tika``
-- A supervisor configuration example is also included in the ``supervisor``
-  part.
-
-If your deployment buildout bases on the deployment buildouts included
+If your deployment buildout is based on the deployment buildouts included
 in the `ftw-buildouts`_ repository on github, you can simply extend the
-``tika-server.cfg`` and you have everything configured:
+``tika-jaxrs-server.cfg`` and you have everything configured:
 
 .. code:: ini
 
@@ -133,7 +126,7 @@ in the `ftw-buildouts`_ repository on github, you can simply extend the
     extends =
         https://raw.github.com/4teamwork/ftw-buildouts/master/production.cfg
         https://raw.github.com/4teamwork/ftw-buildouts/master/zeoclients/4.cfg
-        https://raw.github.com/4teamwork/ftw-buildouts/master/tika-server.cfg
+        https://raw.github.com/4teamwork/ftw-buildouts/master/tika-jaxrs-server.cfg
 
     deployment-number = 05
 
@@ -147,14 +140,15 @@ in the `ftw-buildouts`_ repository on github, you can simply extend the
 Non-daemon buildout example
 ---------------------------
 
-Note that running tika in non-daemon mode is very, very slow!
+Note that running Tika in non-daemon mode is very, very slow!
 
-When you dont want to use tika as daemon, you can simply just configure
-the path to the tika-app.jar in the ``ftw.tika`` ZCML configuration and it will
-fire up tika-app.jar (in a new JVM) every time something needs to be converted.
+When you don't want to use Tika as daemon, you can simply just configure
+the path to the ``tika-app.jar`` in the ``ftw.tika`` ZCML configuration and it
+will fire up ``tika-app.jar`` (in a new JVM) every time something needs to be
+converted.
 
-Here is a short example of how to download the tika-app.jar and configuring
-``ftw.tika`` with buildout:
+Here is a short example of how to download the ``tika-app.jar`` and
+configuring ``ftw.tika`` with buildout:
 
 .. code:: ini
 
@@ -164,7 +158,8 @@ Here is a short example of how to download the tika-app.jar and configuring
 
     [tika-app]
     recipe = hexagonit.recipe.download
-    url = http://mirror.switch.ch/mirror/apache/dist/tika/tika-app-1.4.jar
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.6/tika-app-1.6.jar
+    md5sum = 2d8af1f228000fcda92bd0dda20b80a8
     download-only = true
     filename = tika-app.jar
 
@@ -232,7 +227,7 @@ through buildout.
 Configuration in ZCML
 ---------------------
 
-The path to the Tika JAR file must be configured in ZCML.
+The path to the ``tika-app.jar`` file must be configured in ZCML.
 
 If you used the supplied
 `tika.cfg <https://github.com/4teamwork/ftw.tika/blob/master/tika.cfg>`_
@@ -330,3 +325,4 @@ This package is copyright by `4teamwork <http://www.4teamwork.ch/>`_.
 
 
 .. _ftw-buildouts: https://github.com/4teamwork/ftw-buildouts#production
+.. _tika.cfg: https://github.com/4teamwork/ftw.tika/blob/master/tika.cfg

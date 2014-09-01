@@ -5,9 +5,11 @@ from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.utils import run_process
 from plone.memoize import instance
+from StringIO import StringIO
 from zope.component import queryUtility
 import logging
 import os
+import requests
 import socket
 import tempfile
 
@@ -86,19 +88,23 @@ class TikaConverter(object):
             try:
                 return self.convert_server(document, filename)
             except socket.error, exc:
-                self.log.error('Could not connect to tika server: %s' % str(exc))
+                self.log.error(
+                    'Could not connect to tika server: %s' % str(exc))
 
         return self.convert_local(document, filename)
 
     def convert_server(self, document, filename=''):
-        self.log.info('Converting document with tika server: %s' % filename)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((self.config.host, self.config.port))
-        input = sock.makefile()
-        copy_stream(document, input)
-        input.flush()
-        sock.shutdown(socket.SHUT_WR)
-        return input.read()
+        base_url = "http://{0}:{1}".format(self.config.host, self.config.port)
+        tika_endpoint = '/'.join((base_url, 'tika'))
+        self.log.info(
+            'Converting document with tika JAXRS server: %s' % filename)
+
+        if isinstance(document, basestring):
+            document = StringIO(document)
+
+        headers = {'Accept': 'text/plain'}
+        response = requests.put(tika_endpoint, data=document, headers=headers)
+        return response.content
 
     def convert_local(self, document, filename=''):
         self.log.info('Converting document with LOCAL tika: %s' % filename)

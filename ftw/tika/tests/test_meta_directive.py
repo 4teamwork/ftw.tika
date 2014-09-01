@@ -26,9 +26,9 @@ class TestTikaConfigDirective(TestCase):
         self.assertEquals('/path/to/tika-app.jar', config.path)
 
     def test_config_stores_port(self):
-        self.load_zcml('<tika:config port="8077" />')
+        self.load_zcml('<tika:config port="9998" />')
         config = getUtility(IZCMLTikaConfig)
-        self.assertEquals(8077, config.port)
+        self.assertEquals(9998, config.port)
 
     def test_port_needs_to_be_integer(self):
         with self.assertRaises(ConfigurationError) as cm:

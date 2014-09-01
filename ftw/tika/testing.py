@@ -35,8 +35,11 @@ class FtwTikaLayer(PloneSandboxLayer):
                        context=configurationContext)
 
         # os.getcwd() -> .../parts/test
-        path = os.path.join(os.getcwd(), '..', 'tika-app-download', 'tika-app.jar')
-        self['tika_config'] = {'path': path,
+        parts_path = os.path.join(os.getcwd(), '..')
+
+        app_path = os.path.join(
+            parts_path, 'tika-app-download', 'tika-app.jar')
+        self['tika_config'] = {'path': app_path,
                                'port': os.environ.get('PORT1', '55007')}
 
         xmlconfig.string(
@@ -45,6 +48,9 @@ class FtwTikaLayer(PloneSandboxLayer):
                 self['tika_config']) +
             '</configure>',
             context=configurationContext)
+
+        self['server_path'] = os.path.join(
+            parts_path, 'tika-server-download', 'tika-server.jar')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.tika:default')
@@ -83,11 +89,13 @@ class TikaServerLayer(Layer):
         tika_config.port = None
 
     def start_server(self):
-        command = 'java -jar %(path)s --text --server --port %(port)s' % (
-            self['tika_config'])
+        srv_config = {'server_path': self['server_path']}
+        srv_config.update(self['tika_config'])
+
+        command = 'java -jar %(server_path)s --port %(port)s' % (srv_config)
         self.process = Popen(command, shell=True)
         Thread(target=self.process.communicate).start()
-        time.sleep(0.5)  # give tika some time to boot
+        time.sleep(4.0)  # give tika some time to boot
 
     def stop_server(self):
         if getattr(self, 'process', None) is not None:

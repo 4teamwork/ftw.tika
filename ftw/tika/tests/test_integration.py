@@ -49,7 +49,9 @@ class TestServerConversion(TestCase):
     layer = TIKA_SERVER_INTEGRATION_TESTING
 
     def test_docx_conversion(self):
-        self.assertEquals('Lorem Ipsum', convert_asset('lorem.docx'))
+        # assertIn because the JAXRS server also includes bookmarks:
+        # '[bookmark: _GoBack]Lorem Ipsum'
+        self.assertIn('Lorem Ipsum', convert_asset('lorem.docx'))
 
     def test_doc_conversion(self):
         self.assertEquals('Lorem Ipsum', convert_asset('lorem.doc'))

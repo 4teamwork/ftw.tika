@@ -43,7 +43,7 @@ def tikaConfigDirective(_context, **arguments):
     <configure xmlns:tika="http://namespaces.plone.org/tika">
         <tika:config path="/path/to/tika-app.jar"
                      host="tika.host"
-                     port="8077" />
+                     port="9998" />
     </configure>
     """
 
