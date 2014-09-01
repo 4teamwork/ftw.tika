@@ -1,5 +1,6 @@
 from ftw.tika.exceptions import ProcessError
 from ftw.tika.utils import run_process
+from ftw.tika.utils import strip_word_bookmarks
 from unittest2 import TestCase
 
 
@@ -15,3 +16,7 @@ class TestUtils(TestCase):
         cmd = "false"
         with self.assertRaises(ProcessError):
             stdout, stderr = run_process(cmd)
+
+    def test_strip_word_bookmarks(self):
+        text = '[bookmark: Foo][bookmark: _GoBack]Lorem Ipsum[bookmark: Foo]'
+        self.assertEquals('Lorem Ipsum', strip_word_bookmarks(text))

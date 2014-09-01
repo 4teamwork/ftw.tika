@@ -1,5 +1,6 @@
 from ftw.tika.converter import TikaConverter
 from ftw.tika.testing import TIKA_SERVER_INTEGRATION_TESTING
+from ftw.tika.utils import strip_word_bookmarks
 from unittest2 import TestCase
 import os.path
 
@@ -15,4 +16,4 @@ class TestServerConversion(TestCase):
         converter = TikaConverter()
         with open(os.path.join(ASSETS, 'lorem.docx')) as file_:
             result = converter.convert_server(file_)
-        self.assertEquals('Lorem Ipsum', result.strip())
+        self.assertEquals('Lorem Ipsum', strip_word_bookmarks(result.strip()))

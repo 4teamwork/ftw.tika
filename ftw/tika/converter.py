@@ -4,6 +4,7 @@ from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.utils import run_process
+from ftw.tika.utils import strip_word_bookmarks
 from plone.memoize import instance
 from StringIO import StringIO
 from zope.component import queryUtility
@@ -86,12 +87,19 @@ class TikaConverter(object):
 
         if self.server_configured:
             try:
-                return self.convert_server(document, filename)
+                text = self.convert_server(document, filename)
             except socket.error, exc:
                 self.log.error(
                     'Could not connect to tika server: %s' % str(exc))
+                # Use local tika as fallback
+                text = self.convert_local(document, filename)
+        else:
+            text = self.convert_local(document, filename)
 
-        return self.convert_local(document, filename)
+        if filename.lower().endswith('.docx'):
+            text = strip_word_bookmarks(text)
+
+        return text
 
     def convert_server(self, document, filename=''):
         base_url = "http://{0}:{1}".format(self.config.host, self.config.port)
