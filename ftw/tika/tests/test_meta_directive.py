@@ -21,9 +21,9 @@ class TestTikaConfigDirective(TestCase):
                         ' configuring it in ZCML.')
 
     def test_config_stores_path(self):
-        self.load_zcml('<tika:config path="/path/to/tika.jar" />')
+        self.load_zcml('<tika:config path="/path/to/tika-app.jar" />')
         config = getUtility(IZCMLTikaConfig)
-        self.assertEquals('/path/to/tika.jar', config.path)
+        self.assertEquals('/path/to/tika-app.jar', config.path)
 
     def test_config_stores_port(self):
         self.load_zcml('<tika:config port="8077" />')

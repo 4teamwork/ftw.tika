@@ -8,7 +8,7 @@ import os
 
 
 test_part_dir = os.getcwd()
-test_jar_path = os.path.join(test_part_dir, 'tika.jar')
+test_jar_path = os.path.join(test_part_dir, 'tika-app.jar')
 
 
 class FtwTikaZCMLDirectiveLayer(FtwTikaLayer):

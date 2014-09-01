@@ -19,8 +19,8 @@ class ITikaConfigDirective(Interface):
     """
 
     path = schema.ASCIILine(
-        title=u"JAR Path",
-        description=u"Path to the Tika JAR file.",
+        title=u"tika-app JAR Path",
+        description=u"Path to the tika-app JAR file.",
         required=False,
     )
 
@@ -41,7 +41,7 @@ def tikaConfigDirective(_context, **arguments):
     Usage:
 
     <configure xmlns:tika="http://namespaces.plone.org/tika">
-        <tika:config path="/path/to/tika.jar"
+        <tika:config path="/path/to/tika-app.jar"
                      host="tika.host"
                      port="8077" />
     </configure>

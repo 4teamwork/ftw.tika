@@ -76,7 +76,7 @@ Daemon buildout example
 
     [buildout]
     parts +=
-        tika-download
+        tika-app-download
         tika-server
 
 
@@ -89,22 +89,22 @@ Daemon buildout example
     server-port = 8077
     zcml =
         <configure xmlns:tika="http://namespaces.plone.org/tika">
-            <tika:config path="${tika-download:destination}/${tika-download:filename}"
+            <tika:config path="${tika-app-download:destination}/${tika-app-download:filename}"
                          port="${tika:server-port}" />
         </configure>
 
 
-    [tika-download]
+    [tika-app-download]
     recipe = hexagonit.recipe.download
     url = http://mirror.switch.ch/mirror/apache/dist/tika/tika-app-1.4.jar
     download-only = true
-    filename = tika.jar
+    filename = tika-app.jar
 
 
     [tika-server]
     recipe = collective.recipe.scriptgen
     cmd = java
-    arguments = -jar ${tika-download:destination}/${tika-download:filename} --server --port ${tika:server-port} --text
+    arguments = -jar ${tika-app-download:destination}/${tika-app-download:filename} --server --port ${tika:server-port} --text
 
 
     [supervisor]
@@ -115,7 +115,7 @@ Daemon buildout example
 How it works:
 
 - The ``tika-download`` part downloads the tika jar and places it
-  at ``./parts/tika-download/tika.jar``.
+  at ``./parts/tika-download/tika-app.jar``.
 - The ``tika-server`` part creates a ``bin/tika-server`` script which already
   includes the port configuration defined in the ``tika`` part.
 - The ``instance0`` part is expected to be the Plone instance part and is
@@ -150,29 +150,29 @@ Non-daemon buildout example
 Note that running tika in non-daemon mode is very, very slow!
 
 When you dont want to use tika as daemon, you can simply just configure
-the path to the tika.jar in the ``ftw.tika`` ZCML configuration and it will
-fire up tika.jar (in a new JVM) every time something needs to be converted.
+the path to the tika-app.jar in the ``ftw.tika`` ZCML configuration and it will
+fire up tika-app.jar (in a new JVM) every time something needs to be converted.
 
-Here is a short example of how to download the tika.jar and configuring
+Here is a short example of how to download the tika-app.jar and configuring
 ``ftw.tika`` with buildout:
 
 .. code:: ini
 
     [buildout]
     parts +=
-        tika
+        tika-app
 
-    [tika]
+    [tika-app]
     recipe = hexagonit.recipe.download
     url = http://mirror.switch.ch/mirror/apache/dist/tika/tika-app-1.4.jar
     download-only = true
-    filename = tika.jar
+    filename = tika-app.jar
 
     [instance]
     eggs += ftw.tika
     zcml-additional =
         <configure xmlns:tika="http://namespaces.plone.org/tika">
-            <tika:config path="${tika:destination}/${tika:filename}" />
+            <tika:config path="${tika-app:destination}/${tika-app:filename}" />
         </configure>
 
 
@@ -303,7 +303,7 @@ converter directly by just instanciating it:
             from ftw.tika.converter import TikaConverter
 
             data = StringIO('foo')
-            converter = TikaConverter(path="/path/to/tika.jar")
+            converter = TikaConverter(path="/path/to/tika-app.jar")
             plain_text = converter.convert(data)
 
 The ``convert()`` method accepts either a data string or a file-like stream
