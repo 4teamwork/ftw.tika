@@ -20,3 +20,9 @@ class TikaJarNotConfigured(Exception):
 class TikaJarNotFound(Exception):
     """Raised if a path to Tika JAR file was specified, but is invalid.
     """
+
+
+class TikaServerProtocolMismatch(Exception):
+    """Raised if the Tika server seems to expect a different protocol than
+    the client.
+    """

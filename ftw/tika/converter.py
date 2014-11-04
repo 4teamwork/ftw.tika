@@ -2,6 +2,7 @@ from ftw.tika.exceptions import ProcessError
 from ftw.tika.exceptions import TikaConversionError
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.exceptions import TikaJarNotFound
+from ftw.tika.exceptions import TikaServerProtocolMismatch
 from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.utils import run_process
 from plone.memoize import instance
@@ -87,6 +88,9 @@ class TikaConverter(object):
                 return self.convert_server(document, filename)
             except socket.error, exc:
                 self.log.error('Could not connect to tika server: %s' % str(exc))
+            except TikaServerProtocolMismatch, exc:
+                self.log.error(str(exc))
+                return ''
 
         return self.convert_local(document, filename)
 
@@ -98,7 +102,18 @@ class TikaConverter(object):
         copy_stream(document, input)
         input.flush()
         sock.shutdown(socket.SHUT_WR)
-        return input.read()
+        data = input.read()
+
+        if 'HTTP/1.1 400 Bad Request' in data:
+            # This implementation excepts the dumb TCP socket server from
+            # tika-app.jar. If we get back something that looks like HTTP,
+            # it most likely is the new JAXRS server.
+            raise TikaServerProtocolMismatch(
+                "Got '400 Bad Request' from server. Please make sure you're "
+                "not accidentally running an old version of ftw.tika (< 2.0) "
+                "against a new JAXRS Tika server.")
+
+        return data
 
     def convert_local(self, document, filename=''):
         self.log.info('Converting document with LOCAL tika: %s' % filename)
