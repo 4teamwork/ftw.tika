@@ -5,7 +5,9 @@ Changelog
 1.1.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Detect if we're running an old version of ftw.tika (< 2.0) against the new
+  JAXRS HTTP server and log a helpful error message.
+  [lgraf]
 
 
 1.1.2 (2014-09-01)
