@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.1.3.dev0'
+version = '2.0.0b1.dev0'
 
 tests_require = [
     'Products.CMFCore',
@@ -43,6 +43,7 @@ setup(name='ftw.tika',
 
       install_requires=[
         'setuptools',
+        'requests',
 
         # Zope
         'zope.component',
