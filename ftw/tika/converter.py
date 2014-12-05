@@ -6,6 +6,7 @@ from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.utils import run_process
 from ftw.tika.utils import strip_word_bookmarks
 from plone.memoize import instance
+from requests.exceptions import Timeout
 from StringIO import StringIO
 from zope.component import queryUtility
 import logging
@@ -13,6 +14,9 @@ import os
 import requests
 import socket
 import tempfile
+
+
+CONNECTION_TIMEOUT = 10.0
 
 
 def copy_stream(input_, output):
@@ -88,7 +92,7 @@ class TikaConverter(object):
         if self.server_configured:
             try:
                 text = self.convert_server(document, filename)
-            except socket.error, exc:
+            except (socket.error, Timeout), exc:
                 self.log.error(
                     'Could not connect to tika server: %s' % str(exc))
                 # Use local tika as fallback
@@ -111,7 +115,8 @@ class TikaConverter(object):
             document = StringIO(document)
 
         headers = {'Accept': 'text/plain'}
-        response = requests.put(tika_endpoint, data=document, headers=headers)
+        response = requests.put(tika_endpoint, data=document, headers=headers,
+                                timeout=CONNECTION_TIMEOUT)
         return response.content
 
     def convert_local(self, document, filename=''):
