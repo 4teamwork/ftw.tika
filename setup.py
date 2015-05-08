@@ -31,7 +31,7 @@ setup(name='ftw.tika',
         ],
 
       keywords='plone ftw tika full text indexing apache',
-      author='4teamwork GmbH',
+      author='4teamwork AG',
       author_email='mailto:info@4teamwork.ch',
       url='https://github.com/4teamwork/ftw.tika',
       license='GPL2',
