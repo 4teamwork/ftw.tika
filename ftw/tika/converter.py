@@ -8,6 +8,7 @@ from ftw.tika.utils import strip_word_bookmarks
 from plone.memoize import instance
 from requests.exceptions import Timeout
 from StringIO import StringIO
+from threading import local
 from zope.component import queryUtility
 import logging
 import os
@@ -17,6 +18,8 @@ import tempfile
 
 
 CONNECTION_TIMEOUT = 10.0
+
+thread_locals = local()
 
 
 def copy_stream(input_, output):
@@ -106,17 +109,26 @@ class TikaConverter(object):
         return text
 
     def convert_server(self, document, filename=''):
+        global thread_locals
         base_url = "http://{0}:{1}".format(self.config.host, self.config.port)
         tika_endpoint = '/'.join((base_url, 'tika'))
         self.log.info(
-            'Converting document with tika JAXRS server: %s' % filename)
+            'Converting document with tika JAXRS server '
+            '(session): %s' % filename)
 
         if isinstance(document, basestring):
             document = StringIO(document)
 
         headers = {'Accept': 'text/plain'}
-        response = requests.put(tika_endpoint, data=document, headers=headers,
-                                timeout=CONNECTION_TIMEOUT)
+        if not hasattr(thread_locals, 'tika_session'):
+            thread_locals.tika_session = requests.session()
+
+        response = thread_locals.tika_session.put(
+            tika_endpoint, data=document, headers=headers,
+            timeout=CONNECTION_TIMEOUT)
+        """
+        16:26:37 - 16:27:10
+        """
         return response.content
 
     def convert_local(self, document, filename=''):
