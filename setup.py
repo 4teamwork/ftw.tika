@@ -52,6 +52,7 @@ setup(name='ftw.tika',
         'ZODB3',
 
         # Plone
+        'Plone',
         'Products.GenericSetup',
         'Products.PortalTransforms',
         ],
