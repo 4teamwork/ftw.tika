@@ -5,6 +5,9 @@ Changelog
 2.1.0 (unreleased)
 ------------------
 
+- Add support for extracting text from zip files.
+  [lgraf]
+
 - Add support for Tika 1.6
   [lgraf]
 

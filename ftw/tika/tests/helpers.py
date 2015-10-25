@@ -16,7 +16,9 @@ MIMETYPES_BY_EXTENSION = {
     '.odt': 'application/vnd.oasis.opendocument.text',
     '.sxw': 'application/vnd.sun.xml.writer',
     '.eml': 'message/rfc822',
-    '.pdf': 'application/pdf'}
+    '.pdf': 'application/pdf',
+    '.zip': 'application/zip',
+}
 
 
 def convert_asset(filename):

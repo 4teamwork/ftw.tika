@@ -48,6 +48,11 @@ class TestConversion(TestCase):
     def test_eml_conversion(self):
         self.assertEquals('Lorem Ipsum', convert_asset('lorem.eml'))
 
+    def test_zip_with_pdf_conversion(self):
+        self.assertEquals(
+            'lorem.pdf\n\n\nLorem Ipsum',
+            convert_asset('lorem.zip'))
+
     @log_capture('ftw.tika')
     def test_protected_pdf_conversion(self, log):
         self.assertEquals('', convert_asset('protected.pdf'))
@@ -97,3 +102,8 @@ class TestServerConversion(TestCase):
 
     def test_eml_conversion(self):
         self.assertEquals('Lorem Ipsum', convert_asset('lorem.eml'))
+
+    def test_zip_with_pdf_conversion(self):
+        self.assertEquals(
+            'lorem.pdf\n\n\nLorem Ipsum',
+            convert_asset('lorem.zip'))

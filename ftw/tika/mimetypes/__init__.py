@@ -86,6 +86,9 @@ TYPES = [
 
 # E-Mail messages
 'message/rfc822',
+
+# Zip Archive
+'application/zip',
 ] + PDF_TYPES
 
 
