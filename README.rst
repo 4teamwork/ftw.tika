@@ -5,6 +5,38 @@ This product integrates `Apache Tika <http://tika.apache.org/>`_ for full text
 indexing with **Plone** by providing portal transforms to ``text/plain`` for the
 various document formats supported by Tika.
 
+Compatibility
+-------------
+
+``ftw.tika`` is compatible with Plone 4.x and the Tika versions listed below
+(Plone and Tika versions can be mixed and matched).
+
++------------+--------------------+--+------------+---------------------+
+|  Tika 1.5  |  |Tika_15_Tests|_  |  |  Plone 4.1 |  |Plone_41_Tests|_  |
++------------+--------------------+--+------------+---------------------+
+|  Tika 1.6  |  |Tika_16_Tests|_  |  |  Plone 4.2 |  |Plone_42_Tests|_  |
++------------+--------------------+--+------------+---------------------+
+|  Tika 1.7  |  |Tika_17_Tests|_  |  |  Plone 4.3 |  |Plone_43_Tests|_  |
++------------+--------------------+--+------------+---------------------+
+
+.. |Tika_15_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg/badge/icon
+.. _Tika_15_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg
+
+.. |Tika_16_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.6.cfg/badge/icon
+.. _Tika_16_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.6.cfg
+
+.. |Tika_17_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.7.cfg/badge/icon
+.. _Tika_17_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.7.cfg
+
+.. |Plone_41_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg/badge/icon
+.. _Plone_41_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg
+
+.. |Plone_42_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.2.x.cfg/badge/icon
+.. _Plone_42_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.2.x.cfg
+
+.. |Plone_43_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.3.x.cfg/badge/icon
+.. _Plone_43_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.3.x.cfg
+
 
 Supported Formats
 =================
@@ -195,25 +227,6 @@ Uninstalling ftw.tika
 
 ``ftw.tika`` has an uninstall profile. To uninstall ``ftw.tika``, import the
 ``ftw.tika:uninstall`` profile using the ``portal_setup`` tool.
-
-
-Compatibility
--------------
-
-Plone 4.1
-
-.. image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg/badge/icon
-   :target: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg
-
-Plone 4.2
-
-.. image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.2.x.cfg/badge/icon
-   :target: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.2.x.cfg
-
-Plone 4.3
-
-.. image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.3.x.cfg/badge/icon
-   :target: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.3.x.cfg
 
 
 Configuration

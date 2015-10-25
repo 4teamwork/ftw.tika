@@ -14,6 +14,13 @@ import os
 import time
 
 
+def tika_version():
+    """Determine the Tika version we're testing against.
+    """
+    version = os.environ.get('TESTING_TIKA_VERSION', '0.0')
+    return tuple(map(int, version.split('.')))
+
+
 class MetaZCMLLayer(ComponentRegistryLayer):
 
     def setUp(self):
