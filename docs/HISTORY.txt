@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.2.0 (unreleased)
+2.2.0 (2015-10-25)
 ------------------
 
 - Add support for Tika 1.7
