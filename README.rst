@@ -94,15 +94,15 @@ necessary, copy into your buildout and extend from:
 
     [tika-app-download]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.6/tika-app-1.6.jar
-    md5sum = 2d8af1f228000fcda92bd0dda20b80a8
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.7/tika-app-1.7.jar
+    md5sum = a3deee3a02d59ad0085123806696f9f8
     download-only = true
     filename = tika-app.jar
 
     [tika-server-download]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-server/1.6/tika-server-1.6.jar
-    md5sum = cdd68617e511010f76c357700ebad8c7
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-server/1.7/tika-server-1.7.jar
+    md5sum = 97a9bd477747c65c7f89ccac3554f3ed
     download-only = true
     filename = tika-server.jar
 

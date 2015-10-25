@@ -1,8 +1,8 @@
-from Products.PortalTransforms.interfaces import ITransform
-from ZODB.POSException import ConflictError
-from ftw.tika import mimetypes
 from ftw.tika.converter import TikaConverter
 from ftw.tika.exceptions import TikaConversionError
+from ftw.tika.protected_docs import is_protected_doc
+from Products.PortalTransforms.interfaces import ITransform
+from ZODB.POSException import ConflictError
 from zope.interface import implements
 import logging
 
@@ -60,21 +60,11 @@ class Tika2TextTransform(object):
         return data
 
     def _log_conversion_error(self, exc, mimetype):
-        if ((mimetype in mimetypes.PDF_TYPES and
-             self._is_pdf_protected_exception(exc))
-            or (mimetype in mimetypes.MS_OFFICE_TYPES and
-                self._is_msoffice_protected_exception(exc))):
+        if is_protected_doc(exc, mimetype):
             logger.info('Could not convert password protected document.')
 
         else:
             logger.warn(exc)
-
-    def _is_pdf_protected_exception(self, exc):
-        return ('Error: The supplied password does not match either the'
-                ' owner or user password in the document.' in str(exc))
-
-    def _is_msoffice_protected_exception(self, exc):
-        return 'org.apache.tika.exception.EncryptedDocumentException' in str(exc)
 
 
 def register():
