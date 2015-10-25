@@ -332,6 +332,18 @@ object. If no ``path`` keyword argument is supplied, the converter tries to
 get the path to the ``tika-app.jar`` from the ZCML configuration.
 
 
+Error logging
+-------------
+
+In order to get more detailed error logging when using the Tika JAXRS server,
+you can launch it with the ``-includeStack`` command line option and set the
+environment variable ``FTW_TIKA_VERBOSE_LOGGING`` to something truthy.
+
+``ftw.tika`` will then additionally log the output from Tika (which should
+contain the Java stack trace) in case of a conversion failure, giving you more
+information as to why the conversion failed.
+
+
 Links
 =====
 

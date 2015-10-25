@@ -1,5 +1,6 @@
 from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
 from ftw.tika.testing import TIKA_SERVER_INTEGRATION_TESTING
+from ftw.tika.testing import tika_version
 from ftw.tika.tests.helpers import convert_asset
 from testfixtures import log_capture
 from unittest2 import TestCase
@@ -97,3 +98,27 @@ class TestServerConversion(TestCase):
 
     def test_eml_conversion(self):
         self.assertEquals('Lorem Ipsum', convert_asset('lorem.eml'))
+
+    @log_capture('ftw.tika')
+    def test_protected_pdf_conversion(self, log):
+        self.assertEquals('', convert_asset('protected.pdf'))
+        if tika_version() >= (1, 8):
+            self.assertIn(PROTECTED_MSG, tuple(log.actual()))
+        else:
+            # Assertion on status 422 doesn't work reliably - sometimes Tika
+            # fails with a 500, sometimes with 422 (for the same test)
+            self.assertIn(
+                'Conversion with Tika JAXRS server failed with status',
+                str(tuple(log.actual())))
+
+    @log_capture('ftw.tika')
+    def test_protected_docx_conversion(self, log):
+        self.assertEquals('', convert_asset('protected.docx'))
+        if tika_version() >= (1, 8):
+            self.assertIn(PROTECTED_MSG, tuple(log.actual()))
+        else:
+            # Assertion on status 422 doesn't work reliably - sometimes Tika
+            # fails with a 500, sometimes with 422 (for the same test)
+            self.assertIn(
+                'Conversion with Tika JAXRS server failed with status',
+                str(tuple(log.actual())))

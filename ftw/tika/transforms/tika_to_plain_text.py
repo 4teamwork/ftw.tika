@@ -5,6 +5,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from ZODB.POSException import ConflictError
 from zope.interface import implements
 import logging
+import os
 
 
 TIKA_TRANSFORM_NAME = 'tika_to_plain_text'
@@ -62,9 +63,11 @@ class Tika2TextTransform(object):
     def _log_conversion_error(self, exc, mimetype):
         if is_protected_doc(exc, mimetype):
             logger.info('Could not convert password protected document.')
-
         else:
             logger.warn(exc)
+            if os.environ.get('FTW_TIKA_VERBOSE_LOGGING', False):
+                msg = "Tika output:\n%s" % str(exc.stack_trace)
+                logger.warn(msg)
 
 
 def register():

@@ -115,7 +115,15 @@ class TikaConverter(object):
         response = requests.put(tika_endpoint, data=document, headers=headers,
                                 timeout=CONNECTION_TIMEOUT)
 
-        text = clean_extracted_plaintext(response.content, filename)
+        status, body = response.status_code, response.content
+
+        if not status == 200:
+            msg = ("Conversion with Tika JAXRS server failed "
+                   "with status %s. " % status)
+            raise TikaConversionError(
+                msg, status_code=status, stack_trace=body.strip())
+
+        text = clean_extracted_plaintext(body, filename)
         return text
 
     def convert_local(self, document, filename=''):
@@ -130,7 +138,9 @@ class TikaConverter(object):
             try:
                 stdout, stderr = run_process(cmd)
             except ProcessError, e:
-                raise TikaConversionError(e.message)
+                msg = "Conversion with local Tika failed."
+                stack_trace = e.message
+                raise TikaConversionError(msg, stack_trace=stack_trace)
 
             text = clean_extracted_plaintext(stdout, filename)
             return text
