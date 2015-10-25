@@ -1,7 +1,12 @@
 from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
 from ftw.tika.testing import TIKA_SERVER_INTEGRATION_TESTING
 from ftw.tika.tests.helpers import convert_asset
+from testfixtures import log_capture
 from unittest2 import TestCase
+
+
+PROTECTED_MSG = (
+    'ftw.tika', 'INFO', 'Could not convert password protected document.')
 
 
 class TestConversion(TestCase):
@@ -42,6 +47,16 @@ class TestConversion(TestCase):
 
     def test_eml_conversion(self):
         self.assertEquals('Lorem Ipsum', convert_asset('lorem.eml'))
+
+    @log_capture('ftw.tika')
+    def test_protected_pdf_conversion(self, log):
+        self.assertEquals('', convert_asset('protected.pdf'))
+        self.assertIn(PROTECTED_MSG, tuple(log.actual()))
+
+    @log_capture('ftw.tika')
+    def test_protected_docx_conversion(self, log):
+        self.assertEquals('', convert_asset('protected.docx'))
+        self.assertIn(PROTECTED_MSG, tuple(log.actual()))
 
 
 class TestServerConversion(TestCase):
