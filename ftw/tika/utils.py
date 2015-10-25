@@ -28,6 +28,7 @@ def clean_extracted_plaintext(text, filename=''):
     like word bookmark names or filenames of thumbnails.
     """
     text = strip_word_bookmarks(text, filename)
+    text = strip_thumbnail_names(text, filename)
     return text
 
 
@@ -42,5 +43,15 @@ def strip_word_bookmarks(text, filename=''):
         return text
 
     pattern = re.compile(r'\[bookmark:.*?\]')
+    text = re.sub(pattern, '', text)
+    return text
+
+
+def strip_thumbnail_names(text, filename=''):
+    """Since Tika 1.6 filenames of thumbnails in office documents also get
+    returned as part of the plain text. Therefore we strip the common
+    default filenames for thumbnails here.
+    """
+    pattern = re.compile(r'thumbnail_[0-9*]\.jpeg')
     text = re.sub(pattern, '', text)
     return text
