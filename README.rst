@@ -18,6 +18,8 @@ Compatibility
 +------------+--------------------+--+------------+---------------------+
 |  Tika 1.7  |  |Tika_17_Tests|_  |  |  Plone 4.3 |  |Plone_43_Tests|_  |
 +------------+--------------------+--+------------+---------------------+
+|  Tika 1.8  |  |Tika_18_Tests|_  |  |                                  |
++------------+--------------------+--+------------+---------------------+
 
 .. |Tika_15_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg/badge/icon
 .. _Tika_15_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg
@@ -27,6 +29,9 @@ Compatibility
 
 .. |Tika_17_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.7.cfg/badge/icon
 .. _Tika_17_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.7.cfg
+
+.. |Tika_18_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.8.cfg/badge/icon
+.. _Tika_18_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.8.cfg
 
 .. |Plone_41_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg/badge/icon
 .. _Plone_41_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg
@@ -126,26 +131,34 @@ necessary, copy into your buildout and extend from:
 
     [tika-app-download]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.7/tika-app-1.7.jar
-    md5sum = a3deee3a02d59ad0085123806696f9f8
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.8/tika-app-1.8.jar
+    md5sum = 785aa2ba03a5ad205cb52765f69f66f3
     download-only = true
     filename = tika-app.jar
 
     [tika-server-download]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-server/1.7/tika-server-1.7.jar
-    md5sum = 97a9bd477747c65c7f89ccac3554f3ed
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-server/1.8/tika-server-1.8.jar
+    md5sum = 3ec6d893100e82ac25dc572e6eb1c9ad
     download-only = true
     filename = tika-server.jar
 
     [tika-server]
     recipe = collective.recipe.scriptgen
     cmd = java
-    arguments = -jar ${tika-server-download:destination}/${tika-server-download:filename} --port ${tika:server-port}
+    arguments = -jar ${tika-server-download:destination}/${tika-server-download:filename} --port ${tika:server-port} -includeStack
 
     [instance]
     zcml-additional = ${tika:zcml}
     eggs += ftw.tika
+
+
+.. note:: The ``-includeStack`` command line option for the Tika JAXRS server
+   is only available for Tika >= 1.8. If you're using an older version of Tika,
+   omit it from the arguments.
+   The option will make the Tika JAXRS server return Java stack traces in the
+   response body in case of conversion failures, and therefore allow
+   ``ftw.tika`` to provide more detailed error logging.
 
 
 If your deployment buildout is based on the deployment buildouts included
@@ -190,8 +203,8 @@ configuring ``ftw.tika`` with buildout:
 
     [tika-app]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.6/tika-app-1.6.jar
-    md5sum = 2d8af1f228000fcda92bd0dda20b80a8
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.8/tika-app-1.8.jar
+    md5sum = 785aa2ba03a5ad205cb52765f69f66f3
     download-only = true
     filename = tika-app.jar
 
