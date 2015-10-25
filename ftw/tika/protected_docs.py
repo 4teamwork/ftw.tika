@@ -9,10 +9,12 @@ PROTECTED_PDF_MSGS = (
     # Tika 1.5, 1.6
     'Error: The supplied password does not match either the'
     ' owner or user password in the document.',
+    # Tika 1.7
+    'Document is encrypted',
 )
 
 PROTECTED_MSOFFICE_MSGS = (
-    # Tika 1.5, 1.6
+    # Tika 1.5, 1.6, 1.7
     'org.apache.tika.exception.EncryptedDocumentException',
 )
 
