@@ -3,8 +3,8 @@ from ftw.tika.exceptions import TikaConversionError
 from ftw.tika.exceptions import TikaJarNotConfigured
 from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.interfaces import IZCMLTikaConfig
+from ftw.tika.utils import clean_extracted_plaintext
 from ftw.tika.utils import run_process
-from ftw.tika.utils import strip_word_bookmarks
 from plone.memoize import instance
 from requests.exceptions import Timeout
 from StringIO import StringIO
@@ -100,9 +100,6 @@ class TikaConverter(object):
         else:
             text = self.convert_local(document, filename)
 
-        if filename.lower().endswith('.docx'):
-            text = strip_word_bookmarks(text)
-
         return text
 
     def convert_server(self, document, filename=''):
@@ -117,7 +114,9 @@ class TikaConverter(object):
         headers = {'Accept': 'text/plain'}
         response = requests.put(tika_endpoint, data=document, headers=headers,
                                 timeout=CONNECTION_TIMEOUT)
-        return response.content
+
+        text = clean_extracted_plaintext(response.content, filename)
+        return text
 
     def convert_local(self, document, filename=''):
         self.log.info('Converting document with LOCAL tika: %s' % filename)
@@ -132,7 +131,9 @@ class TikaConverter(object):
                 stdout, stderr = run_process(cmd)
             except ProcessError, e:
                 raise TikaConversionError(e.message)
-            return stdout
+
+            text = clean_extracted_plaintext(stdout, filename)
+            return text
 
         finally:
             os.unlink(temp_file.name)

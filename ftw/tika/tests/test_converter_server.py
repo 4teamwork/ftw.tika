@@ -14,6 +14,9 @@ class TestServerConversion(TestCase):
 
     def test_convert_docx(self):
         converter = TikaConverter()
-        with open(os.path.join(ASSETS, 'lorem.docx')) as file_:
+        filename = 'lorem.docx'
+        with open(os.path.join(ASSETS, filename)) as file_:
             result = converter.convert_server(file_)
-        self.assertEquals('Lorem Ipsum', strip_word_bookmarks(result.strip()))
+        self.assertEquals(
+            'Lorem Ipsum',
+            strip_word_bookmarks(result.strip(), filename=filename))

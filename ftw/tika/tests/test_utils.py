@@ -17,6 +17,12 @@ class TestUtils(TestCase):
         with self.assertRaises(ProcessError):
             stdout, stderr = run_process(cmd)
 
-    def test_strip_word_bookmarks(self):
+    def test_strip_word_bookmarks_removes_bookmarks_from_docx(self):
         text = '[bookmark: Foo][bookmark: _GoBack]Lorem Ipsum[bookmark: Foo]'
-        self.assertEquals('Lorem Ipsum', strip_word_bookmarks(text))
+        self.assertEquals(
+            'Lorem Ipsum',
+            strip_word_bookmarks(text, filename='foo.docx'))
+
+    def test_strip_word_bookmarks_doesnt_touch_files_other_than_docx(self):
+        text = '[bookmark: Foo][bookmark: _GoBack]Lorem Ipsum[bookmark: Foo]'
+        self.assertEquals(text, strip_word_bookmarks(text))
