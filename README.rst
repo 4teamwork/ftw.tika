@@ -22,6 +22,8 @@ Compatibility
 +------------+--------------------+--+------------+---------------------+
 |  Tika 1.9  |  |Tika_19_Tests|_  |  |                                  |
 +------------+--------------------+--+------------+---------------------+
+|  Tika 1.10 |  |Tika_110_Tests|_ |  |                                  |
++------------+--------------------+--+------------+---------------------+
 
 .. |Tika_15_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg/badge/icon
 .. _Tika_15_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg
@@ -37,6 +39,9 @@ Compatibility
 
 .. |Tika_19_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.9.cfg/badge/icon
 .. _Tika_19_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.9.cfg
+
+.. |Tika_110_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.10.cfg/badge/icon
+.. _Tika_110_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.10.cfg
 
 .. |Plone_41_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg/badge/icon
 .. _Plone_41_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg
@@ -136,15 +141,15 @@ necessary, copy into your buildout and extend from:
 
     [tika-app-download]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.9/tika-app-1.9.jar
-    md5sum = 7b73ce50ac217021aa51dd3d1ef2ce13
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.10/tika-app-1.10.jar
+    md5sum = a899be6467e446031315926c10b8763c
     download-only = true
     filename = tika-app.jar
 
     [tika-server-download]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-server/1.9/tika-server-1.9.jar
-    md5sum = 4ec60fb9c7bc9341fd4feec74e39bc1e
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-server/1.10/tika-server-1.10.jar
+    md5sum = 973965a14c73a93315e756e62a18e8a0
     download-only = true
     filename = tika-server.jar
 
@@ -208,8 +213,8 @@ configuring ``ftw.tika`` with buildout:
 
     [tika-app]
     recipe = hexagonit.recipe.download
-    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.9/tika-app-1.9.jar
-    md5sum = 7b73ce50ac217021aa51dd3d1ef2ce13
+    url = http://repo1.maven.org/maven2/org/apache/tika/tika-app/1.10/tika-app-1.10.jar
+    md5sum = a899be6467e446031315926c10b8763c
     download-only = true
     filename = tika-app.jar
 
