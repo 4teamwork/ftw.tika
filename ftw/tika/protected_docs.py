@@ -24,10 +24,15 @@ def is_protected_doc(exc, mimetype):
     a password protected document, based on the document's MIME type and
     the Java exception.
     """
+    stack_trace = str(exc.stack_trace)
+    if not stack_trace:
+        # No Java stack trace to aid in the detection of the exact error
+        return False
+
     if mimetype in mimetypes.PDF_TYPES:
-        return any(msg in str(exc) for msg in PROTECTED_PDF_MSGS)
+        return any(msg in stack_trace for msg in PROTECTED_PDF_MSGS)
 
     if mimetype in mimetypes.MS_OFFICE_TYPES:
-        return any(msg in str(exc) for msg in PROTECTED_MSOFFICE_MSGS)
+        return any(msg in stack_trace for msg in PROTECTED_MSOFFICE_MSGS)
 
     return False

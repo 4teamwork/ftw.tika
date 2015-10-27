@@ -1,9 +1,9 @@
 from ftw.testing import ComponentRegistryLayer
 from ftw.tika.interfaces import IZCMLTikaConfig
+from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
 from plone.testing import Layer
 from subprocess import Popen
@@ -12,6 +12,13 @@ from zope.component import getUtility
 from zope.configuration import xmlconfig
 import os
 import time
+
+
+def tika_version():
+    """Determine the Tika version we're testing against.
+    """
+    version = os.environ.get('TESTING_TIKA_VERSION', '0.0')
+    return tuple(map(int, version.split('.')))
 
 
 class MetaZCMLLayer(ComponentRegistryLayer):
@@ -92,7 +99,18 @@ class TikaServerLayer(Layer):
         srv_config = {'server_path': self['server_path']}
         srv_config.update(self['tika_config'])
 
-        command = 'java -jar %(server_path)s --port %(port)s' % (srv_config)
+        additional_opts = []
+
+        if tika_version() >= (1, 8):
+            # Tika 1.8 allows to include the Java stack traces in the
+            # response body for failed conversion requests.
+            additional_opts.append('-includeStack')
+
+        srv_config['additional_opts'] = ' '.join(additional_opts)
+
+        command = ('java -jar %(server_path)s --port %(port)s '
+                   '%(additional_opts)s' % (srv_config))
+
         self.process = Popen(command, shell=True)
         Thread(target=self.process.communicate).start()
         time.sleep(4.0)  # give tika some time to boot

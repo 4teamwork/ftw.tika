@@ -2,10 +2,17 @@ Changelog
 =========
 
 
-2.2.1 (unreleased)
+2.3.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make use of the fact that Tika JAXRS server now can return the Java stack
+  traces in the response body, allowing ftw.tika to provide better error
+  logging in the case of conversion failures (for example, detecting that
+  conversion failed because a document is password protected).
+  [lgraf]
+
+- Add support for Tika 1.8
+  [lgraf]
 
 
 2.2.0 (2015-10-25)
