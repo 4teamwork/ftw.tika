@@ -5,6 +5,9 @@ Changelog
 2.3.0 (unreleased)
 ------------------
 
+- Fall back to local Tika on any RequestException, not just Timeout.
+  [lgraf]
+
 - Make use of the fact that Tika JAXRS server now can return the Java stack
   traces in the response body, allowing ftw.tika to provide better error
   logging in the case of conversion failures (for example, detecting that
