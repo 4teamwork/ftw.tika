@@ -2,10 +2,11 @@ Changelog
 =========
 
 
-2.3.1 (unreleased)
+2.4.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add support for Tika 1.9
+  [lgraf]
 
 
 2.3.0 (2015-10-27)
