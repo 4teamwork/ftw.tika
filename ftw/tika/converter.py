@@ -6,7 +6,7 @@ from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.utils import clean_extracted_plaintext
 from ftw.tika.utils import run_process
 from plone.memoize import instance
-from requests.exceptions import Timeout
+from requests.exceptions import RequestException
 from StringIO import StringIO
 from zope.component import queryUtility
 import logging
@@ -92,7 +92,7 @@ class TikaConverter(object):
         if self.server_configured:
             try:
                 text = self.convert_server(document, filename)
-            except (socket.error, Timeout), exc:
+            except (socket.error, RequestException), exc:
                 self.log.error(
                     'Could not connect to tika server: %s' % str(exc))
                 # Use local tika as fallback
