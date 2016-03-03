@@ -8,10 +8,11 @@ from zope.interface import Interface
 class ZCMLTikaConfig(object):
     implements(IZCMLTikaConfig)
 
-    def __init__(self, path=None, port=None, host='localhost'):
+    def __init__(self, path=None, port=None, host='localhost', timeout=10):
         self.path = path
         self.port = port
         self.host = host
+        self.timeout = timeout
 
 
 class ITikaConfigDirective(Interface):
@@ -35,6 +36,12 @@ class ITikaConfigDirective(Interface):
         required=False,
         )
 
+    timeout = schema.Int(
+        title=u'Connection Timeout',
+        description=u'The timeout for the Connection to the tika server.',
+        required=False,
+        default=10)
+
 
 def tikaConfigDirective(_context, **arguments):
     """The <tika:config /> directive.
@@ -43,7 +50,8 @@ def tikaConfigDirective(_context, **arguments):
     <configure xmlns:tika="http://namespaces.plone.org/tika">
         <tika:config path="/path/to/tika-app.jar"
                      host="tika.host"
-                     port="9998" />
+                     port="9998"
+                     timeout="10" />
     </configure>
     """
 
