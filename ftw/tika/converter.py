@@ -16,9 +16,6 @@ import socket
 import tempfile
 
 
-CONNECTION_TIMEOUT = 10.0
-
-
 def copy_stream(input_, output):
     """Reads from the ``input_`` stream or string and writes into
     the ``output``. It does this in a buffered fashion for making
@@ -112,8 +109,9 @@ class TikaConverter(object):
             document = StringIO(document)
 
         headers = {'Accept': 'text/plain'}
+        timeout = self.config.timeout
         response = requests.put(tika_endpoint, data=document, headers=headers,
-                                timeout=CONNECTION_TIMEOUT)
+                                timeout=timeout)
 
         status, body = response.status_code, response.content
 

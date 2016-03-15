@@ -231,6 +231,44 @@ configuring ``ftw.tika`` with buildout:
         </configure>
 
 
+Different Host buildout example
+-------------------------------
+
+If you already have a tika server (f.e. docker) you can connect to it without
+having to install it into the plone instance. Unfortunately if the system run
+into a timeout it will still try to use the local one as backup. (And produce
+an error in the log file)
+
+.. code:: ini
+
+    [buildout]
+
+    [tika]
+    server-port = 9998
+    server-host = myhost
+    server-timeout = 10
+    zcml =
+        <configure xmlns:tika="http://namespaces.plone.org/tika">
+            <tika:config host="${tika:server-host}"
+                         port="${tika:server-port}"
+                         timeout="${tika:server-timeout}" />
+        </configure>
+
+    [instance]
+    zcml-additional = ${tika:zcml}
+    eggs += ftw.tika
+
+
+You have the following configuration Options:
+
+* ``host``: the host where tika is running
+* ``port``: the port of the tika server
+* ``timeout``: you can define the connection timeout of the server in seconds
+
+``timeout`` defaults to 10 seconds and is configurable for your needs.
+0 means no timeout at all.
+
+
 Installing ftw.tika in Plone
 ----------------------------
 

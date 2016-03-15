@@ -46,6 +46,22 @@ class TestTikaConfigDirective(TestCase):
         config = getUtility(IZCMLTikaConfig)
         self.assertEquals('localhost', config.host)
 
+    def test_config_stores_timeout(self):
+        self.load_zcml('<tika:config timeout="50" />')
+        config = getUtility(IZCMLTikaConfig)
+        self.assertEquals(50, config.timeout)
+
+    def test_config_defaults_timeout(self):
+        self.load_zcml('<tika:config />')
+        config = getUtility(IZCMLTikaConfig)
+        self.assertEquals(10, config.timeout)
+
+    def test_timeout_needs_to_be_integer(self):
+        with self.assertRaises(ConfigurationError) as cm:
+            self.load_zcml('<tika:config timeout="foo" />')
+        self.assertIn('ValueError: invalid literal for int',
+                      str(cm.exception))
+
     def load_zcml(self, *lines):
         self.layer.load_zcml_string('\n'.join((
                     '<configure xmlns:tika="http://namespaces.plone.org/tika">',
