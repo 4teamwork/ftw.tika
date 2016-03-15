@@ -8,12 +8,23 @@ from ftw.tika.utils import run_process
 from plone.memoize import instance
 from requests.exceptions import RequestException
 from StringIO import StringIO
+from threading import local
 from zope.component import queryUtility
 import logging
 import os
 import requests
 import socket
 import tempfile
+
+
+thread_locals = local()
+
+
+def get_requests_session():
+    attrname = 'tika_requests_session'
+    if not hasattr(thread_locals, attrname):
+        setattr(thread_locals, attrname, requests.session())
+    return getattr(thread_locals, attrname)
 
 
 def copy_stream(input_, output):
@@ -110,8 +121,10 @@ class TikaConverter(object):
 
         headers = {'Accept': 'text/plain'}
         timeout = self.config.timeout
-        response = requests.put(tika_endpoint, data=document, headers=headers,
-                                timeout=timeout)
+        response = get_requests_session().put(tika_endpoint,
+                                              data=document,
+                                              headers=headers,
+                                              timeout=timeout)
 
         status, body = response.status_code, response.content
 

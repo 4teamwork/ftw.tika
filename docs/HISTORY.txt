@@ -5,6 +5,8 @@ Changelog
 2.6.1 (unreleased)
 ------------------
 
+- Use requests session. [jone]
+
 - Make connection timeout configurable. [dready]
 
 
