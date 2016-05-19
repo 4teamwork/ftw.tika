@@ -1,6 +1,8 @@
 ftw.tika
 ========
 
+test
+
 This product integrates `Apache Tika <http://tika.apache.org/>`_ for full text
 indexing with **Plone** by providing portal transforms to ``text/plain`` for the
 various document formats supported by Tika.
