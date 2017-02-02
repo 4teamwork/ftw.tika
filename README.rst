@@ -11,51 +11,19 @@ Compatibility
 ``ftw.tika`` is compatible with Plone 4.x and the Tika versions listed below
 (Plone and Tika versions can be mixed and matched).
 
-+------------+--------------------+--+------------+---------------------+
-|  Tika 1.5  |  |Tika_15_Tests|_  |  |  Plone 4.1 |  |Plone_41_Tests|_  |
-+------------+--------------------+--+------------+---------------------+
-|  Tika 1.6  |  |Tika_16_Tests|_  |  |  Plone 4.2 |  |Plone_42_Tests|_  |
-+------------+--------------------+--+------------+---------------------+
-|  Tika 1.7  |  |Tika_17_Tests|_  |  |  Plone 4.3 |  |Plone_43_Tests|_  |
-+------------+--------------------+--+------------+---------------------+
-|  Tika 1.8  |  |Tika_18_Tests|_  |  |                                  |
-+------------+--------------------+--+------------+---------------------+
-|  Tika 1.9  |  |Tika_19_Tests|_  |  |                                  |
-+------------+--------------------+--+------------+---------------------+
-|  Tika 1.10 |  |Tika_110_Tests|_ |  |                                  |
-+------------+--------------------+--+------------+---------------------+
-|  Tika 1.11 |  |Tika_111_Tests|_ |  |                                  |
-+------------+--------------------+--+------------+---------------------+
-
-.. |Tika_15_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg/badge/icon
-.. _Tika_15_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.5.cfg
-
-.. |Tika_16_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.6.cfg/badge/icon
-.. _Tika_16_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.6.cfg
-
-.. |Tika_17_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.7.cfg/badge/icon
-.. _Tika_17_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.7.cfg
-
-.. |Tika_18_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.8.cfg/badge/icon
-.. _Tika_18_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.8.cfg
-
-.. |Tika_19_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.9.cfg/badge/icon
-.. _Tika_19_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.9.cfg
-
-.. |Tika_110_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.10.cfg/badge/icon
-.. _Tika_110_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.10.cfg
-
-.. |Tika_111_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.11.cfg/badge/icon
-.. _Tika_111_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-tika-1.11.cfg
-
-.. |Plone_41_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg/badge/icon
-.. _Plone_41_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.1.x.cfg
-
-.. |Plone_42_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.2.x.cfg/badge/icon
-.. _Plone_42_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.2.x.cfg
-
-.. |Plone_43_Tests| image:: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.3.x.cfg/badge/icon
-.. _Plone_43_Tests: https://jenkins.4teamwork.ch/job/ftw.tika-master-test-plone-4.3.x.cfg
++------------+------------+
+|  Tika 1.6  |  Plone 4.2 |
++------------+------------+
+|  Tika 1.7  |  Plone 4.3 |
++------------+------------+
+|  Tika 1.8  |            |
++------------+------------+
+|  Tika 1.9  |            |
++------------+------------+
+|  Tika 1.10 |            |
++------------+------------+
+|  Tika 1.11 |            |
++------------+------------+
 
 
 Supported Formats
