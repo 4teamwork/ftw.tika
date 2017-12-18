@@ -100,11 +100,19 @@ class TikaConverter(object):
         if self.server_configured:
             try:
                 text = self.convert_server(document, filename)
-            except (socket.error, RequestException), exc:
+
+            except requests.exceptions.ConnectionError, exc:
+                # Could not connect to the server at all.
+                # Server is probably not running
                 self.log.error(
                     'Could not connect to tika server: %s' % str(exc))
-                # Use local tika as fallback
                 text = self.convert_local(document, filename)
+
+            except (socket.error, RequestException), exc:
+                # An error occured, maybe a connection timeout.
+                self.log.error(
+                    'Full text extraction using tika failed: %s' % str(exc))
+                text = u''
         else:
             text = self.convert_local(document, filename)
 
