@@ -5,8 +5,7 @@ Changelog
 2.8.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Remove local fallback when server fails. [jone]
 
 2.8.0 (2017-12-18)
 ------------------
