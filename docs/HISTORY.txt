@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.8.1 (unreleased)
+2.9.0 (2017-12-19)
 ------------------
 
 - Remove local fallback when server fails. [jone]
