@@ -5,7 +5,7 @@ version = '2.10.1.dev0'
 
 tests_require = [
     'Products.CMFCore',
-    'ftw.testing',
+    'ftw.testing<2a',
     'plone.app.testing',
     'plone.testing',
     'testfixtures',
