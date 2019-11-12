@@ -1,6 +1,6 @@
 from ftw.tika.interfaces import IZCMLTikaConfig
 from ftw.tika.testing import META_ZCML
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.configuration.exceptions import ConfigurationError

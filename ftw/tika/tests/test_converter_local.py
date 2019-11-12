@@ -1,6 +1,6 @@
 from ftw.tika.converter import TikaConverter
 from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
-from unittest2 import TestCase
+from unittest import TestCase
 import os.path
 
 

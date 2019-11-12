@@ -2,7 +2,7 @@ from ftw.tika.exceptions import TikaJarNotFound
 from ftw.tika.testing import FtwTikaLayer
 from plone.app.testing import FunctionalTesting
 from Products.CMFCore.utils import getToolByName
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.configuration import xmlconfig
 import os
 
