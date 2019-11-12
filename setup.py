@@ -9,7 +9,6 @@ tests_require = [
     'plone.app.testing',
     'plone.testing',
     'testfixtures',
-    'unittest2',
     'zope.configuration',
     ]
 

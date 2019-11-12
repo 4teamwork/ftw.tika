@@ -2,7 +2,7 @@ from ftw.tika.exceptions import ProcessError
 from ftw.tika.utils import run_process
 from ftw.tika.utils import strip_thumbnail_names
 from ftw.tika.utils import strip_word_bookmarks
-from unittest2 import TestCase
+from unittest import TestCase
 
 
 class TestUtils(TestCase):

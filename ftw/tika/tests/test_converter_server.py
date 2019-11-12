@@ -1,7 +1,7 @@
 from ftw.tika.converter import TikaConverter
 from ftw.tika.testing import TIKA_SERVER_INTEGRATION_TESTING
 from ftw.tika.utils import strip_word_bookmarks
-from unittest2 import TestCase
+from unittest import TestCase
 import os.path
 
 

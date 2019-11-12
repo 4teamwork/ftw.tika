@@ -3,7 +3,7 @@ from ftw.tika.testing import TIKA_SERVER_INTEGRATION_TESTING
 from ftw.tika.testing import tika_version
 from ftw.tika.tests.helpers import convert_asset
 from testfixtures import log_capture
-from unittest2 import TestCase
+from unittest import TestCase
 
 
 PROTECTED_MSG = (

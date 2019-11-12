@@ -4,7 +4,7 @@ from ftw.tika.testing import FTW_TIKA_INTEGRATION_TESTING
 from ftw.tika.transforms.tika_to_plain_text import TIKA_TRANSFORM_NAME
 from Products.CMFCore.utils import getToolByName
 from Products.PortalTransforms.utils import TransformException
-from unittest2 import TestCase
+from unittest import TestCase
 import logging
 
 
