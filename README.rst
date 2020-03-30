@@ -202,8 +202,8 @@ configuring ``ftw.tika`` with buildout:
 Different Host buildout example
 -------------------------------
 
-If you already have a tika server (f.e. docker) you can connect to it without
-having to install it into the plone instance. Unfortunately if the system run
+If you already have a tika server (e.g. docker) you can connect to it without
+having to install it into the plone instance. Unfortunately if the system runs
 into a timeout it will still try to use the local one as backup. (And produce
 an error in the log file)
 
@@ -227,11 +227,11 @@ an error in the log file)
     eggs += ftw.tika
 
 
-You have the following configuration Options:
+You have the following configuration options:
 
 * ``host``: the host where tika is running
 * ``port``: the port of the tika server
-* ``timeout``: you can define the connection timeout of the server in seconds
+* ``timeout``: the connection timeout of the server in seconds
 
 ``timeout`` defaults to 10 seconds and is configurable for your needs.
 0 means no timeout at all.
@@ -338,7 +338,7 @@ Stand-alone converter
 
 The code calling Tika is encapsulated in its own class, so if for some reason
 you don't want to use the ``portal_transforms`` tool, you can also use the
-converter directly by just instanciating it:
+converter directly by just instantiating it:
 
 .. code:: python
 
