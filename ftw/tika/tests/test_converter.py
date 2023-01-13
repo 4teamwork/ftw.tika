@@ -1,4 +1,4 @@
-from StringIO import StringIO
+from io import StringIO
 from ftw.testing import MockTestCase
 from ftw.tika.converter import TikaConverter
 from ftw.tika.exceptions import ProcessError

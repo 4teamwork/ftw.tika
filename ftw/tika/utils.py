@@ -43,7 +43,7 @@ def strip_word_bookmarks(text, filename=''):
         return text
 
     pattern = re.compile(r'\[bookmark:.*?\]')
-    text = re.sub(pattern, '', text)
+    text = re.sub(pattern, '', text.decode('utf-8'))
     return text
 
 
@@ -53,5 +53,5 @@ def strip_thumbnail_names(text, filename=''):
     default filenames for thumbnails here.
     """
     pattern = re.compile(r'thumbnail_[0-9*]\.jpeg')
-    text = re.sub(pattern, '', text)
+    text = re.sub(pattern, '', text.decode('utf-8'))
     return text

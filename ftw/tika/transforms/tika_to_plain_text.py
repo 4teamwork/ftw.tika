@@ -3,7 +3,7 @@ from ftw.tika.exceptions import TikaConversionError
 from ftw.tika.protected_docs import is_protected_doc
 from Products.PortalTransforms.interfaces import ITransform
 from ZODB.POSException import ConflictError
-from zope.interface import implements
+from zope.interface import implementer
 import logging
 import os
 
@@ -14,12 +14,12 @@ INITIAL_TYPES = ['application/pdf']
 logger = logging.getLogger('ftw.tika')
 
 
+@implementer(ITransform)
 class Tika2TextTransform(object):
     """A portal transform that converts various office document formats to
     'text/plain' using Apache Tika.
     """
 
-    implements(ITransform)
 
     __name__ = TIKA_TRANSFORM_NAME
     output = "text/plain"
@@ -49,11 +49,11 @@ class Tika2TextTransform(object):
         except (ConflictError, KeyboardInterrupt):
             raise
 
-        except TikaConversionError, exc:
+        except TikaConversionError as exc:
             self._log_conversion_error(exc, mimetype=mimetype)
             plain_text = ''
 
-        except Exception, exc:
+        except Exception as exc:
             logger.warn(exc)
             plain_text = ''
 

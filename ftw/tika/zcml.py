@@ -1,12 +1,12 @@
 from ftw.tika.interfaces import IZCMLTikaConfig
 from zope import schema
 from zope.component.zcml import utility
-from zope.interface import implements
+from zope.interface import implementer
 from zope.interface import Interface
 
 
+@implementer(IZCMLTikaConfig)
 class ZCMLTikaConfig(object):
-    implements(IZCMLTikaConfig)
 
     def __init__(self, path=None, port=None, host='localhost', timeout=10):
         self.path = path
