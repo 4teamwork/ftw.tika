@@ -42,6 +42,8 @@ def strip_word_bookmarks(text, filename=''):
     if not filename.lower().endswith('.docx'):
         return text
 
+    if isinstance(text, bytes):
+        text = text.decode('utf-8')
     pattern = re.compile(r'\[bookmark:.*?\]')
     text = re.sub(pattern, '', text)
     return text
@@ -52,6 +54,8 @@ def strip_thumbnail_names(text, filename=''):
     returned as part of the plain text. Therefore we strip the common
     default filenames for thumbnails here.
     """
+    if isinstance(text, bytes):
+        text = text.decode('utf-8')
     pattern = re.compile(r'thumbnail_[0-9*]\.jpeg')
     text = re.sub(pattern, '', text)
     return text
